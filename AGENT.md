@@ -249,6 +249,30 @@ This platform serves an agricultural machinery import company bridging Western, 
 
 ---
 
+### 2025-12-17 - Session 2 (Continued): i18n Polish & Fixes
+
+**Duration:** ~45 minutes
+
+**Modifications:**
+- ✅ **Catalog & Product Detail**: Full translation of static text (filters, specs, tabs, buttons).
+- ✅ **Language Switcher Redesign**:
+  - Replaced text flags with high-quality inline SVGs to fix "RU RU" issue on Windows.
+  - Implemented "slick" dropdown UI with animations and shadows.
+  - Updated Header to use the new pill-shaped design.
+- ✅ **SearchBar**: Translated placeholder and results headers.
+- ✅ **Clean up**: Removed hardcoded locale prefixes from all links.
+
+**Files Modified:**
+- `frontend/src/components/common/LanguageSwitcher.tsx` (Complete redesign)
+- `frontend/src/components/layout/Header.tsx`
+- `frontend/src/app/catalog/product/[slug]/page.tsx`
+- `frontend/src/components/common/SearchBar.tsx`
+
+**Files Created/Updated:**
+- `frontend/src/locales/*.json` (Added missing keys)
+
+---
+
 ## 🏗️ Architecture Notes
 | Component | Technology | Rationale |
 |-----------|------------|-----------|
@@ -332,4 +356,4 @@ uzagro-platform/
 
 ---
 
-*Last Updated: 2025-12-17 10:15 UTC+5*
+*Last Updated: 2025-12-17 10:55 UTC+5*
