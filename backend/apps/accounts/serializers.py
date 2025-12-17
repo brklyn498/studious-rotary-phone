@@ -4,6 +4,7 @@ Serializers for accounts app.
 
 from rest_framework import serializers
 from django.contrib.auth import get_user_model
+from django.db.models import Q
 from .models import Region, BusinessProfile
 
 User = get_user_model()
@@ -80,11 +81,19 @@ class UserCreateSerializer(serializers.ModelSerializer):
     password = serializers.CharField(write_only=True, min_length=8)
     password_confirm = serializers.CharField(write_only=True)
     
+    # Optional business fields
+    company_name = serializers.CharField(write_only=True, required=False, allow_blank=True)
+    inn = serializers.CharField(write_only=True, required=False, allow_blank=True)
+
+    # Region input
+    region_name = serializers.CharField(write_only=True, required=False)
+
     class Meta:
         model = User
         fields = [
             'username', 'email', 'phone', 'password', 'password_confirm',
-            'first_name', 'last_name', 'preferred_language'
+            'first_name', 'last_name', 'preferred_language',
+            'user_type', 'company_name', 'inn', 'region_name'
         ]
     
     def validate(self, data):
@@ -92,14 +101,52 @@ class UserCreateSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError({
                 'password_confirm': 'Пароли не совпадают.'
             })
+
+        user_type = data.get('user_type')
+        if user_type == User.UserType.BUSINESS:
+            if not data.get('company_name'):
+                raise serializers.ValidationError({'company_name': 'Название компании обязательно для бизнеса.'})
+            if not data.get('inn'):
+                raise serializers.ValidationError({'inn': 'ИНН обязателен для бизнеса.'})
+
         return data
     
     def create(self, validated_data):
         validated_data.pop('password_confirm')
         password = validated_data.pop('password')
+
+        # Extract extra fields
+        company_name = validated_data.pop('company_name', '')
+        inn = validated_data.pop('inn', '')
+        region_name = validated_data.pop('region_name', '')
+
+        # Resolve region if provided
+        if region_name:
+            # Try to match by name (ru/uz) or code
+            region = Region.objects.filter(
+                Q(name_ru__iexact=region_name) |
+                Q(name_uz__iexact=region_name) |
+                Q(code__iexact=region_name)
+            ).first()
+            if region:
+                validated_data['region'] = region
+
+        # Create user
         user = User(**validated_data)
         user.set_password(password)
         user.save()
+
+        # Create business profile if needed
+        if user.user_type == User.UserType.BUSINESS and inn:
+            BusinessProfile.objects.create(
+                user=user,
+                inn=inn,
+                company_name=company_name,
+                legal_address='',  # Will be filled by verification
+                contact_name=f"{user.first_name} {user.last_name}",
+                contact_phone=user.phone or ''
+            )
+
         return user
 
 

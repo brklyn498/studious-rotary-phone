@@ -6,6 +6,7 @@ import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/Button';
 import { Card, CardContent } from '@/components/ui/Card';
 import { Eye, EyeOff, Phone, Lock, User, Building2, ArrowLeft, CheckCircle } from 'lucide-react';
+import { authApi } from '@/lib/api/auth';
 
 type UserType = 'farmer' | 'business';
 
@@ -62,13 +63,24 @@ export default function RegisterPage() {
                 throw new Error('Необходимо согласиться с условиями использования');
             }
 
-            // Simulate API call
-            await new Promise(resolve => setTimeout(resolve, 1500));
+            // API Call
+            await authApi.register({
+                name: formData.name,
+                phone: formData.phone,
+                email: formData.email,
+                password: formData.password,
+                password_confirm: formData.confirmPassword,
+                user_type: userType,
+                company_name: userType === 'business' ? formData.companyName : undefined,
+                inn: userType === 'business' ? formData.inn : undefined,
+                region_name: formData.region,
+            });
 
             // Successful registration - show success step
             setStep(3);
         } catch (err) {
-            setError(err instanceof Error ? err.message : 'Ошибка регистрации');
+            console.error(err);
+            setError(err instanceof Error ? err.message : 'Ошибка регистрации. Проверьте данные.');
         } finally {
             setIsLoading(false);
         }
