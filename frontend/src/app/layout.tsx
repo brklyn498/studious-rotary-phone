@@ -5,6 +5,8 @@ import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { BottomNav } from "@/components/layout/BottomNav";
 import { I18nProvider } from "@/lib/i18n";
+import { CompareBar } from "@/components/catalog/CompareBar";
+import { Toaster } from "sonner";
 
 const inter = Inter({
   subsets: ["latin", "cyrillic"],
@@ -51,6 +53,8 @@ export default function RootLayout({
           </main>
           <Footer />
           <BottomNav />
+          <CompareBar />
+          <Toaster richColors position="top-right" />
         </I18nProvider>
       </body>
     </html>

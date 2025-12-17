@@ -7,10 +7,21 @@ import { Button } from '@/components/ui/Button';
 import { SearchBar } from '@/components/common/SearchBar';
 import { LanguageSwitcher } from '@/components/common/LanguageSwitcher';
 import { useI18n } from '@/lib/i18n';
+import { useCartStore } from '@/lib/store/cartStore';
+import { useEffect } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 
 export function Header() {
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
     const { t } = useI18n();
+    const items = useCartStore((state) => state.items);
+    const [mounted, setMounted] = useState(false);
+
+    useEffect(() => {
+        setMounted(true);
+    }, []);
+
+    const cartCount = items.reduce((sum, item) => sum + item.quantity, 0);
 
     const navigation = [
         { name: t('common.home'), href: '/' },
@@ -74,9 +85,23 @@ export function Header() {
 
                     {/* Actions */}
                     <div className="flex items-center gap-2">
-                        <button className="hidden md:flex p-2 text-gray-600 hover:text-green-600 hover:bg-gray-100 rounded-lg">
+                        <Link href="/cart" className="hidden md:flex p-2 text-gray-600 hover:text-green-600 hover:bg-gray-100 rounded-lg relative">
                             <ShoppingCart className="h-6 w-6" />
-                        </button>
+                            <AnimatePresence>
+                                {mounted && cartCount > 0 && (
+                                    <motion.span
+                                        key="cart-badge"
+                                        initial={{ scale: 0 }}
+                                        animate={{ scale: 1 }}
+                                        exit={{ scale: 0 }}
+                                        transition={{ type: "spring", stiffness: 300, damping: 20 }}
+                                        className="absolute -top-1 -right-1 bg-green-600 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center"
+                                    >
+                                        {cartCount}
+                                    </motion.span>
+                                )}
+                            </AnimatePresence>
+                        </Link>
                         <Link href="/auth/login">
                             <Button variant="outline" size="sm" className="hidden md:flex">
                                 <User className="h-4 w-4 mr-2" />

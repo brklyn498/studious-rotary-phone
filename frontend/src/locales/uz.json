@@ -1,5 +1,7 @@
 {
     "common": {
+        "undo": "Bekor qilish",
+        "added": "Qo'shildi!",
         "home": "Bosh sahifa",
         "catalog": "Katalog",
         "spareParts": "Ehtiyot qismlar",
@@ -29,7 +31,9 @@
         "learnMore": "Batafsil",
         "products": "Mahsulotlar",
         "showAllResults": "\"{query}\" bo'yicha barcha natijalar",
-        "noSearchResults": "\"{query}\" bo'yicha hech narsa topilmadi"
+        "noSearchResults": "\"{query}\" bo'yicha hech narsa topilmadi",
+        "clear": "Tozalash",
+        "hide": "Yashirish"
     },
     "home": {
         "hero": {
@@ -78,7 +82,12 @@
         "activeFilters": "Faol filtrlar",
         "page": "Sahifa {current} / {total}",
         "prev": "Oldingi",
-        "next": "Keyingi"
+        "next": "Keyingi",
+        "compare": "Taqqoslash",
+        "compareBtn": "Taqqoslash",
+        "productsSelected": "ta mahsulot tanlandi",
+        "comparison": "Mahsulotlarni taqqoslash",
+        "emptyComparison": "Taqqoslash ro'yxati bo'sh"
     },
     "product": {
         "sku": "Artikul",
@@ -134,6 +143,19 @@
         "passwordChanged": "Parol o'zgartirildi!",
         "registrationComplete": "Ro'yxatdan o'tish yakunlandi!",
         "telegramLogin": "Telegram orqali kirish"
+    },
+    "cart": {
+        "title": "Savat",
+        "empty": "Savatingiz bo'sh",
+        "emptyDescription": "Siz hali savatchaga hech narsa qo'shmaganingiz ko'rinadi. Kerakli mahsulotlarni topish uchun katalogga o'ting.",
+        "summary": "Jami",
+        "subtotal": "Oraliq jami",
+        "tax": "Soliq",
+        "total": "To'lov uchun jami",
+        "checkout": "Buyurtmani rasmiylashtirish",
+        "clear": "Savatni tozalash",
+        "secureCheckout": "Xavfsiz to'lov",
+        "addedToCart": "{name} savatga qo'shildi"
     },
     "profile": {
         "title": "Shaxsiy kabinet",

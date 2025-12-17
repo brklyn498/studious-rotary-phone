@@ -1,5 +1,7 @@
 {
     "common": {
+        "undo": "Undo",
+        "added": "Added!",
         "home": "Home",
         "catalog": "Catalog",
         "spareParts": "Spare Parts",
@@ -29,7 +31,9 @@
         "learnMore": "Learn More",
         "products": "Products",
         "showAllResults": "Show all results for \"{query}\"",
-        "noSearchResults": "No results found for \"{query}\""
+        "noSearchResults": "No results found for \"{query}\"",
+        "clear": "Clear",
+        "hide": "Hide"
     },
     "home": {
         "hero": {
@@ -78,7 +82,12 @@
         "activeFilters": "Active Filters",
         "page": "Page {current} of {total}",
         "prev": "Previous",
-        "next": "Next"
+        "next": "Next",
+        "compare": "Compare",
+        "compareBtn": "Compare",
+        "productsSelected": "products selected",
+        "comparison": "Product Comparison",
+        "emptyComparison": "Comparison list is empty"
     },
     "product": {
         "sku": "SKU",
@@ -134,6 +143,19 @@
         "passwordChanged": "Password Changed!",
         "registrationComplete": "Registration Complete!",
         "telegramLogin": "Sign in with Telegram"
+    },
+    "cart": {
+        "title": "Cart",
+        "empty": "Your cart is empty",
+        "emptyDescription": "Looks like you haven't added anything to your cart yet. Go to the catalog to find the products you need.",
+        "summary": "Summary",
+        "subtotal": "Subtotal",
+        "tax": "Tax",
+        "total": "Total",
+        "checkout": "Proceed to Checkout",
+        "clear": "Clear Cart",
+        "secureCheckout": "Secure Checkout",
+        "addedToCart": "{name} added to cart"
     },
     "profile": {
         "title": "My Account",

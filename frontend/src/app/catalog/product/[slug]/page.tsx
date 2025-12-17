@@ -22,101 +22,12 @@ import {
     Heart,
     Phone,
     MessageCircle,
+
 } from 'lucide-react';
+import { useCartStore } from '@/lib/store/cartStore';
+import { toast } from 'sonner';
 
-// Mock product for fallback
-const mockProduct: ProductDetail = {
-    id: 1,
-    sku: 'YTO-X1204',
-    slug: 'yto-x1204-tractor',
-    product_type: 'machinery',
-    name: 'Трактор YTO X1204',
-    short_description: 'Мощный колесный трактор 120 л.с. для всех видов сельскохозяйственных работ',
-    full_description: `
-    <h3>Описание</h3>
-    <p>YTO X1204 — это мощный и надёжный колёсный трактор, предназначенный для выполнения самых разнообразных сельскохозяйственных работ. Двигатель мощностью 120 л.с. обеспечивает высокую производительность даже в сложных условиях.</p>
-    
-    <h3>Преимущества</h3>
-    <ul>
-      <li>Высокая проходимость благодаря полному приводу 4WD</li>
-      <li>Комфортабельная кабина с кондиционером</li>
-      <li>Современная гидравлическая система</li>
-      <li>Экономичный расход топлива</li>
-      <li>Простота обслуживания и доступность запчастей</li>
-    </ul>
-  `,
-    main_image: undefined,
-    category: { id: 1, slug: 'tractors', name: 'Тракторы', name_ru: 'Тракторы' },
-    brand: { id: 1, slug: 'yto', name: 'YTO', country: 'Китай', is_verified: true },
-    pricing: { show_to_guests: true, can_see_price: true, price_usd: 45000, price_uzs: 567000000 },
-    stock_status: 'in_stock',
-    is_featured: true,
-    specifications: {
-        engine_power: { value: 120, unit: 'л.с.' },
-        engine_type: { value: 'Дизельный' },
-        cylinders: { value: 4 },
-        displacement: { value: 6.5, unit: 'л' },
-        transmission: { value: '16/8 механическая' },
-        max_speed: { value: 35, unit: 'км/ч' },
-        lift_capacity: { value: 4500, unit: 'кг' },
-        pto_speed: { value: '540/1000' },
-        fuel_tank: { value: 200, unit: 'л' },
-        weight: { value: 5200, unit: 'кг' },
-    },
-    specifications_formatted: [
-        { key: 'engine_power', label: 'Мощность двигателя', value: '120 л.с.' },
-        { key: 'engine_type', label: 'Тип двигателя', value: 'Дизельный' },
-        { key: 'cylinders', label: 'Количество цилиндров', value: '4' },
-        { key: 'displacement', label: 'Объём двигателя', value: '6.5 л' },
-        { key: 'transmission', label: 'Трансмиссия', value: '16/8 механическая' },
-        { key: 'max_speed', label: 'Максимальная скорость', value: '35 км/ч' },
-        { key: 'lift_capacity', label: 'Грузоподъёмность', value: '4500 кг' },
-        { key: 'pto_speed', label: 'Скорость ВОМ', value: '540/1000 об/мин' },
-        { key: 'fuel_tank', label: 'Топливный бак', value: '200 л' },
-        { key: 'weight', label: 'Масса', value: '5200 кг' },
-    ],
-    images: [],
-    documents: [
-        { id: 1, doc_type: 'brochure', title: 'Брошюра YTO X1204', file: '/docs/yto-x1204-brochure.pdf' },
-        { id: 2, doc_type: 'manual', title: 'Руководство по эксплуатации', file: '/docs/yto-x1204-manual.pdf' },
-    ],
-    video_url: undefined,
-    weight_kg: 5200,
-    ships_from: 'Ташкент',
-    estimated_delivery_days: 3,
-    view_count: 1234,
-};
 
-const mockRelatedProducts: Product[] = [
-    {
-        id: 2,
-        sku: 'YTO-X904',
-        slug: 'yto-x904-tractor',
-        product_type: 'machinery',
-        name: 'Трактор YTO X904',
-        short_description: 'Универсальный трактор 90 л.с.',
-        main_image: undefined,
-        category: { id: 1, slug: 'tractors', name: 'Тракторы', name_ru: 'Тракторы' },
-        brand: { id: 1, slug: 'yto', name: 'YTO', country: 'Китай' },
-        pricing: { show_to_guests: true, can_see_price: true, price_usd: 35000, price_uzs: 441000000 },
-        stock_status: 'in_stock',
-        is_featured: false,
-    },
-    {
-        id: 6,
-        sku: 'YTO-X1604',
-        slug: 'yto-x1604-tractor',
-        product_type: 'machinery',
-        name: 'Трактор YTO X1604',
-        short_description: 'Мощный трактор 160 л.с.',
-        main_image: undefined,
-        category: { id: 1, slug: 'tractors', name: 'Тракторы', name_ru: 'Тракторы' },
-        brand: { id: 1, slug: 'yto', name: 'YTO', country: 'Китай' },
-        pricing: { show_to_guests: true, can_see_price: true, price_usd: 62000, price_uzs: 780000000 },
-        stock_status: 'low_stock',
-        is_featured: true,
-    },
-];
 
 export default function ProductDetailPage() {
     const params = useParams();
@@ -129,6 +40,25 @@ export default function ProductDetailPage() {
     const [error, setError] = useState<string | null>(null);
     const [selectedImageIndex, setSelectedImageIndex] = useState(0);
     const [activeTab, setActiveTab] = useState<'description' | 'specs' | 'documents'>('description');
+    const { addItem, removeItem } = useCartStore();
+    const [isAdded, setIsAdded] = useState(false);
+
+    const handleAddToCart = () => {
+        if (!product) return;
+
+        addItem(product);
+        setIsAdded(true);
+
+        toast.success(t('cart.addedToCart', { name: product.name }), {
+            description: formatPriceUSD(product.pricing.price_usd || 0),
+            action: {
+                label: t('common.undo'),
+                onClick: () => removeItem(product.id)
+            },
+        });
+
+        setTimeout(() => setIsAdded(false), 2000);
+    };
 
     const getStatusLabel = (status: string) => {
         switch (status) {
@@ -148,23 +78,32 @@ export default function ProductDetailPage() {
             setError(null);
 
             try {
-                const [productData, relatedData] = await Promise.all([
-                    catalogApi.getProduct(slug).catch(() => mockProduct),
-                    catalogApi.getRelatedProducts(slug).catch(() => mockRelatedProducts),
-                ]);
-
+                // Fetch product and related products
+                const productData = await catalogApi.getProduct(slug);
                 setProduct(productData);
-                setRelatedProducts(relatedData);
-                setLoading(false);
-            } catch (err) {
+
+                // Try to fetch related products, but don't block if it fails
+                try {
+                    const relatedData = await catalogApi.getRelatedProducts(slug);
+                    setRelatedProducts(relatedData);
+                } catch (err) {
+                    console.warn('Failed to fetch related products', err);
+                    setRelatedProducts([]);
+                }
+            } catch (err: any) {
                 console.error('Failed to fetch product:', err);
-                setError('Не удалось загрузить товар');
+                // Better error message
+                setError(err.message === 'API Error: 404 Not Found'
+                    ? t('catalog.noResults') // Or simpler "Not Found"
+                    : t('common.error')
+                );
+            } finally {
                 setLoading(false);
             }
         };
 
         fetchProduct();
-    }, [slug]);
+    }, [slug, t]);
 
     if (loading) {
         return (
@@ -352,8 +291,20 @@ export default function ProductDetailPage() {
                         {/* Actions */}
                         <div className="flex flex-col sm:flex-row gap-3 mb-6">
                             {product.product_type === 'spare_part' ? (
-                                <Button size="lg" className="flex-1">
-                                    {t('product.addToCart')}
+                                <Button
+                                    size="lg"
+                                    className={cn("flex-1 transition-all duration-300", isAdded ? "bg-green-700" : "")}
+                                    onClick={handleAddToCart}
+                                    disabled={isAdded}
+                                >
+                                    {isAdded ? (
+                                        <>
+                                            <Check className="h-5 w-5 mr-2" />
+                                            {t('common.added')}
+                                        </>
+                                    ) : (
+                                        t('product.addToCart')
+                                    )}
                                 </Button>
                             ) : (
                                 <Button size="lg" className="flex-1">

@@ -17,121 +17,12 @@ import {
 import { useI18n } from '@/lib/i18n';
 
 // Mock data for SSR fallback
-const mockCategories: Category[] = [
-    { id: 1, slug: 'tractors', name: 'Тракторы', name_ru: 'Тракторы', product_count: 24 },
-    { id: 2, slug: 'harvesters', name: 'Комбайны', name_ru: 'Комбайны', product_count: 12 },
-    { id: 3, slug: 'tillage', name: 'Почвообработка', name_ru: 'Почвообработка', product_count: 18 },
-    { id: 4, slug: 'sowing', name: 'Посевная техника', name_ru: 'Посевная техника', product_count: 15 },
-    { id: 5, slug: 'spare-parts', name: 'Запчасти', name_ru: 'Запчасти', product_count: 156 },
-];
 
-const mockBrands: Brand[] = [
-    { id: 1, slug: 'yto', name: 'YTO', country: 'Китай', is_verified: true },
-    { id: 2, slug: 'rostselmash', name: 'Rostselmash', country: 'Россия', is_verified: true },
-    { id: 3, slug: 'foton', name: 'Foton Lovol', country: 'Китай', is_verified: true },
-    { id: 4, slug: 'kuhn', name: 'KUHN', country: 'Франция', is_verified: true },
-    { id: 5, slug: 'amazone', name: 'AMAZONE', country: 'Германия', is_verified: true },
-];
-
-const mockProducts: Product[] = [
-    {
-        id: 1,
-        sku: 'YTO-X1204',
-        slug: 'yto-x1204-tractor',
-        product_type: 'machinery',
-        name: 'Трактор YTO X1204',
-        short_description: 'Мощный колесный трактор 120 л.с.',
-        main_image: undefined,
-        category: mockCategories[0],
-        brand: mockBrands[0],
-        pricing: { show_to_guests: true, can_see_price: true, price_usd: 45000, price_uzs: 567000000 },
-        stock_status: 'in_stock',
-        is_featured: true,
-    },
-    {
-        id: 2,
-        sku: 'YTO-X904',
-        slug: 'yto-x904-tractor',
-        product_type: 'machinery',
-        name: 'Трактор YTO X904',
-        short_description: 'Универсальный трактор 90 л.с.',
-        main_image: undefined,
-        category: mockCategories[0],
-        brand: mockBrands[0],
-        pricing: { show_to_guests: true, can_see_price: true, price_usd: 35000, price_uzs: 441000000 },
-        stock_status: 'in_stock',
-        is_featured: false,
-    },
-    {
-        id: 3,
-        sku: 'FOTON-TD904',
-        slug: 'foton-td904-tractor',
-        product_type: 'machinery',
-        name: 'Трактор Foton Lovol TD904',
-        short_description: 'Надежный трактор для любых задач',
-        main_image: undefined,
-        category: mockCategories[0],
-        brand: mockBrands[2],
-        pricing: { show_to_guests: true, can_see_price: true, price_usd: 31000, price_uzs: 390000000 },
-        stock_status: 'in_stock',
-        is_featured: false,
-    },
-    {
-        id: 4,
-        sku: 'RSM-161',
-        slug: 'rostselmash-161-combine',
-        product_type: 'machinery',
-        name: 'Комбайн зерноуборочный РСМ 161',
-        short_description: 'Высокопроизводительный зерноуборочный комбайн',
-        main_image: undefined,
-        category: mockCategories[1],
-        brand: mockBrands[1],
-        pricing: { show_to_guests: false, can_see_price: false, price_usd: null, price_uzs: null },
-        stock_status: 'pre_order',
-        is_featured: true,
-    },
-    {
-        id: 5,
-        sku: 'KUHN-DISC',
-        slug: 'kuhn-disc-harrow',
-        product_type: 'machinery',
-        name: 'Дисковая борона KUHN Discover',
-        short_description: 'Профессиональная дисковая борона',
-        main_image: undefined,
-        category: mockCategories[2],
-        brand: mockBrands[3],
-        pricing: { show_to_guests: true, can_see_price: true, price_usd: 18000, price_uzs: 227000000 },
-        stock_status: 'in_stock',
-        is_featured: false,
-    },
-    {
-        id: 6,
-        sku: 'YTO-X1604',
-        slug: 'yto-x1604-tractor',
-        product_type: 'machinery',
-        name: 'Трактор YTO X1604',
-        short_description: 'Мощный трактор 160 л.с. для тяжелых работ',
-        main_image: undefined,
-        category: mockCategories[0],
-        brand: mockBrands[0],
-        pricing: { show_to_guests: true, can_see_price: true, price_usd: 62000, price_uzs: 780000000 },
-        stock_status: 'low_stock',
-        is_featured: true,
-    },
-];
 
 export default function CatalogPage() {
     const { t } = useI18n();
-    const [products, setProducts] = useState<Product[]>(mockProducts);
-
-    const sortOptions = [
-        { value: '-created_at', label: t('catalog.newest') },
-        { value: 'base_price_usd', label: t('catalog.priceAsc') },
-        { value: '-base_price_usd', label: t('catalog.priceDesc') },
-        { value: 'name_ru', label: t('catalog.byName') },
-    ];
-    const [categories, setCategories] = useState<Category[]>(mockCategories);
-    const [brands, setBrands] = useState<Brand[]>(mockBrands);
+    const [categories, setCategories] = useState<Category[]>([]);
+    const [brands, setBrands] = useState<Brand[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
 
@@ -147,6 +38,15 @@ export default function CatalogPage() {
     const [totalCount, setTotalCount] = useState(0);
     const pageSize = 12;
 
+    const [products, setProducts] = useState<Product[]>([]);
+
+    const sortOptions = [
+        { value: '-created_at', label: t('catalog.newest') },
+        { value: 'base_price_usd', label: t('catalog.priceAsc') },
+        { value: '-base_price_usd', label: t('catalog.priceDesc') },
+        { value: 'name_ru', label: t('catalog.byName') },
+    ];
+
     // Fetch data from API
     useEffect(() => {
         const fetchData = async () => {
@@ -155,28 +55,30 @@ export default function CatalogPage() {
             try {
                 // Fetch categories and brands in parallel
                 const [categoriesResponse, brandsResponse] = await Promise.all([
-                    catalogApi.getCategories().catch(() => null),
-                    catalogApi.getBrands().catch(() => null),
+                    catalogApi.getCategories().catch(err => {
+                        console.error('Failed to fetch categories:', err);
+                        return [];
+                    }),
+                    catalogApi.getBrands().catch(err => {
+                        console.error('Failed to fetch brands:', err);
+                        return [];
+                    }),
                 ]);
 
-                // Handle categories - could be array or paginated response
+                // Handle categories
                 if (categoriesResponse) {
                     const categoriesArray = Array.isArray(categoriesResponse)
                         ? categoriesResponse
-                        : (categoriesResponse as any).results || mockCategories;
+                        : (categoriesResponse as any).results || [];
                     setCategories(categoriesArray);
-                } else {
-                    setCategories(mockCategories);
                 }
 
-                // Handle brands - could be array or paginated response
+                // Handle brands
                 if (brandsResponse) {
                     const brandsArray = Array.isArray(brandsResponse)
                         ? brandsResponse
-                        : (brandsResponse as any).results || mockBrands;
+                        : (brandsResponse as any).results || [];
                     setBrands(brandsArray);
-                } else {
-                    setBrands(mockBrands);
                 }
 
                 // Fetch products with filters
@@ -186,30 +88,28 @@ export default function CatalogPage() {
                     category: selectedCategory || undefined,
                     brand: selectedBrand || undefined,
                     ordering: sortBy,
-                }).catch(() => null);
+                });
 
                 if (productsResponse && productsResponse.results) {
                     setProducts(productsResponse.results);
                     setTotalCount(productsResponse.count);
                 } else {
-                    setProducts(mockProducts);
-                    setTotalCount(mockProducts.length);
+                    setProducts([]);
+                    setTotalCount(0);
                 }
 
-                setLoading(false);
             } catch (err) {
                 console.error('Failed to fetch catalog data:', err);
-                // Use mock data on error
-                setCategories(mockCategories);
-                setBrands(mockBrands);
-                setProducts(mockProducts);
-                setTotalCount(mockProducts.length);
+                setError(t('common.error'));
+                setProducts([]);
+                setTotalCount(0);
+            } finally {
                 setLoading(false);
             }
         };
 
         fetchData();
-    }, [page, selectedCategory, selectedBrand, sortBy]);
+    }, [page, selectedCategory, selectedBrand, sortBy, t]);
 
     const clearFilters = () => {
         setSelectedCategory(null);

@@ -1,5 +1,7 @@
 {
     "common": {
+        "undo": "Отменить",
+        "added": "Добавлено!",
         "home": "Главная",
         "catalog": "Каталог",
         "spareParts": "Запчасти",
@@ -29,7 +31,9 @@
         "learnMore": "Подробнее",
         "products": "Товары",
         "showAllResults": "Показать все результаты для \"{query}\"",
-        "noSearchResults": "По запросу \"{query}\" ничего не найдено"
+        "noSearchResults": "По запросу \"{query}\" ничего не найдено",
+        "clear": "Очистить",
+        "hide": "Скрыть"
     },
     "home": {
         "hero": {
@@ -78,7 +82,12 @@
         "activeFilters": "Активные фильтры",
         "page": "Страница {current} из {total}",
         "prev": "Назад",
-        "next": "Вперед"
+        "next": "Вперед",
+        "compare": "Сравнить",
+        "compareBtn": "Сравнить",
+        "productsSelected": "товаров выбрано",
+        "comparison": "Сравнение товаров",
+        "emptyComparison": "Список сравнения пуст"
     },
     "product": {
         "sku": "Артикул",
@@ -134,6 +143,19 @@
         "passwordChanged": "Пароль изменён!",
         "registrationComplete": "Регистрация завершена!",
         "telegramLogin": "Войти через Telegram"
+    },
+    "cart": {
+        "title": "Корзина",
+        "empty": "Ваша корзина пуста",
+        "emptyDescription": "Похоже, вы еще ничего не добавили в корзину. Перейдите в каталог, чтобы найти нужные товары.",
+        "summary": "Итого",
+        "subtotal": "Подытог",
+        "tax": "Налог",
+        "total": "Всего к оплате",
+        "checkout": "Оформить заказ",
+        "clear": "Очистить корзину",
+        "secureCheckout": "Безопасная оплата",
+        "addedToCart": "Товар {name} добавлен в корзину"
     },
     "profile": {
         "title": "Личный кабинет",
