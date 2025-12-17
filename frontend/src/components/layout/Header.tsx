@@ -2,19 +2,24 @@
 
 import Link from 'next/link';
 import { useState } from 'react';
-import { Menu, X, Search, ShoppingCart, User, Phone } from 'lucide-react';
+import { Menu, X, ShoppingCart, User, Phone } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
-
-const navigation = [
-    { name: 'Главная', href: '/ru' },
-    { name: 'Каталог', href: '/ru/catalog' },
-    { name: 'Запчасти', href: '/ru/catalog?type=spare_part' },
-    { name: 'Услуги', href: '/ru/services' },
-    { name: 'О компании', href: '/ru/about' },
-];
+import { SearchBar } from '@/components/common/SearchBar';
+import { LanguageSwitcher } from '@/components/common/LanguageSwitcher';
+import { useI18n } from '@/lib/i18n';
 
 export function Header() {
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+    const { t } = useI18n();
+
+    const navigation = [
+        { name: t('common.home'), href: '/' },
+        { name: t('common.catalog'), href: '/catalog' },
+        { name: t('common.spareParts'), href: '/catalog?type=spare_part' },
+        { name: t('common.services'), href: '/services' },
+        { name: t('common.about'), href: '/about' },
+        { name: t('common.contacts'), href: '/contacts' },
+    ];
 
     return (
         <header className="bg-white shadow-sm sticky top-0 z-50">
@@ -28,9 +33,9 @@ export function Header() {
                         </a>
                     </div>
                     <div className="hidden md:flex items-center gap-4">
-                        <span>Пн-Пт: 9:00 - 18:00</span>
+                        <span>{t('common.workingHours')}</span>
                         <span className="text-green-300">|</span>
-                        <span>RU</span>
+                        <LanguageSwitcher className="ml-2" showName={false} />
                     </div>
                 </div>
             </div>
@@ -39,7 +44,7 @@ export function Header() {
             <div className="max-w-7xl mx-auto px-4">
                 <div className="flex items-center justify-between h-16">
                     {/* Logo */}
-                    <Link href="/ru" className="flex items-center gap-2">
+                    <Link href="/" className="flex items-center gap-2">
                         <div className="w-10 h-10 bg-green-600 rounded-lg flex items-center justify-center">
                             <span className="text-white font-bold text-xl">У</span>
                         </div>
@@ -51,21 +56,14 @@ export function Header() {
 
                     {/* Search bar - desktop */}
                     <div className="hidden md:flex flex-1 max-w-lg mx-8">
-                        <div className="relative w-full">
-                            <input
-                                type="text"
-                                placeholder="Поиск техники и запчастей..."
-                                className="w-full h-10 pl-10 pr-4 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 outline-none"
-                            />
-                            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400" />
-                        </div>
+                        <SearchBar />
                     </div>
 
                     {/* Desktop navigation */}
                     <nav className="hidden lg:flex items-center gap-6">
                         {navigation.map((item) => (
                             <Link
-                                key={item.name}
+                                key={item.href}
                                 href={item.href}
                                 className="text-gray-700 hover:text-green-600 font-medium transition-colors"
                             >
@@ -79,10 +77,12 @@ export function Header() {
                         <button className="hidden md:flex p-2 text-gray-600 hover:text-green-600 hover:bg-gray-100 rounded-lg">
                             <ShoppingCart className="h-6 w-6" />
                         </button>
-                        <Button variant="outline" size="sm" className="hidden md:flex">
-                            <User className="h-4 w-4 mr-2" />
-                            Войти
-                        </Button>
+                        <Link href="/auth/login">
+                            <Button variant="outline" size="sm" className="hidden md:flex">
+                                <User className="h-4 w-4 mr-2" />
+                                {t('common.login')}
+                            </Button>
+                        </Link>
                         <button
                             className="lg:hidden p-2 text-gray-600"
                             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
@@ -97,19 +97,12 @@ export function Header() {
             {mobileMenuOpen && (
                 <div className="lg:hidden bg-white border-t">
                     <div className="px-4 py-3">
-                        <div className="relative">
-                            <input
-                                type="text"
-                                placeholder="Поиск..."
-                                className="w-full h-10 pl-10 pr-4 border border-gray-300 rounded-lg"
-                            />
-                            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400" />
-                        </div>
+                        <SearchBar />
                     </div>
                     <nav className="px-4 pb-4 space-y-1">
                         {navigation.map((item) => (
                             <Link
-                                key={item.name}
+                                key={item.href}
                                 href={item.href}
                                 className="block py-2 text-gray-700 hover:text-green-600 font-medium"
                                 onClick={() => setMobileMenuOpen(false)}
@@ -118,8 +111,8 @@ export function Header() {
                             </Link>
                         ))}
                         <hr className="my-2" />
-                        <Link href="/ru/auth/login" className="block py-2 text-green-600 font-medium">
-                            Войти
+                        <Link href="/auth/login" className="block py-2 text-green-600 font-medium">
+                            {t('common.login')}
                         </Link>
                     </nav>
                 </div>

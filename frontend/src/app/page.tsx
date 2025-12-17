@@ -1,6 +1,9 @@
+'use client';
+
 import Link from 'next/link';
 import { Button } from '@/components/ui/Button';
 import { Card, CardContent } from '@/components/ui/Card';
+import { useI18n } from '@/lib/i18n';
 import {
   Tractor,
   Wheat,
@@ -18,14 +21,6 @@ const categoryIcons = {
   'wheat': Wheat,
   'wrench': Wrench,
 };
-
-// Mock data for demo (will be replaced with API calls)
-const categories = [
-  { slug: 'tractors', name: 'Тракторы', icon: 'tractor', count: 24 },
-  { slug: 'harvesters', name: 'Комбайны', icon: 'wheat', count: 12 },
-  { slug: 'tillage', name: 'Почвообработка', icon: 'wrench', count: 18 },
-  { slug: 'spare-parts', name: 'Запчасти', icon: 'wrench', count: 156 },
-];
 
 const featuredProducts = [
   {
@@ -66,30 +61,39 @@ const featuredProducts = [
   },
 ];
 
-const whyUs = [
-  {
-    icon: Shield,
-    title: 'Гарантия качества',
-    description: 'Сертифицированная техника от официальных дилеров',
-  },
-  {
-    icon: Truck,
-    title: 'Доставка по Узбекистану',
-    description: 'Быстрая доставка в любой регион страны',
-  },
-  {
-    icon: HeadphonesIcon,
-    title: 'Сервисная поддержка',
-    description: 'Гарантийное и постгарантийное обслуживание',
-  },
-  {
-    icon: BadgeDollarSign,
-    title: 'Выгодные цены',
-    description: 'Специальные условия для оптовых покупателей',
-  },
-];
-
 export default function HomePage() {
+  const { t } = useI18n();
+
+  const categories = [
+    { slug: 'tractors', name: t('footer.tractors'), icon: 'tractor', count: 24 },
+    { slug: 'harvesters', name: t('footer.harvesters'), icon: 'wheat', count: 12 },
+    { slug: 'tillage', name: t('footer.implements'), icon: 'wrench', count: 18 },
+    { slug: 'spare-parts', name: t('footer.spareParts'), icon: 'wrench', count: 156 },
+  ];
+
+  const whyUs = [
+    {
+      icon: Shield,
+      title: t('home.whyUs.warranty.title'),
+      description: t('home.whyUs.warranty.description'),
+    },
+    {
+      icon: Truck,
+      title: t('home.whyUs.delivery.title'),
+      description: t('home.whyUs.delivery.description'),
+    },
+    {
+      icon: HeadphonesIcon,
+      title: t('home.whyUs.service.title'),
+      description: t('home.whyUs.service.description'),
+    },
+    {
+      icon: BadgeDollarSign,
+      title: t('home.whyUs.experience.title'),
+      description: t('home.whyUs.experience.description'),
+    },
+  ];
+
   return (
     <div>
       {/* Hero Section */}
@@ -98,21 +102,21 @@ export default function HomePage() {
         <div className="relative max-w-7xl mx-auto px-4 py-20 md:py-32">
           <div className="max-w-2xl">
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 leading-tight">
-              Надёжная сельхозтехника для Узбекистана
+              {t('home.hero.title')}
             </h1>
             <p className="text-xl md:text-2xl text-green-100 mb-8">
-              Тракторы, комбайны и запчасти от ведущих производителей мира
+              {t('home.hero.subtitle')}
             </p>
             <div className="flex flex-col sm:flex-row gap-4">
-              <Link href="/ru/catalog">
+              <Link href="/catalog">
                 <Button size="lg" variant="secondary" className="w-full sm:w-auto">
-                  Смотреть каталог
+                  {t('home.hero.cta')}
                   <ChevronRight className="ml-2 h-5 w-5" />
                 </Button>
               </Link>
-              <Link href="/ru/contacts">
+              <Link href="/contacts">
                 <Button size="lg" variant="outline" className="w-full sm:w-auto border-white text-white hover:bg-white/10">
-                  Связаться с нами
+                  {t('home.hero.contact')}
                 </Button>
               </Link>
             </div>
@@ -125,10 +129,10 @@ export default function HomePage() {
         <div className="max-w-7xl mx-auto px-4">
           <div className="flex justify-between items-center mb-8">
             <h2 className="text-2xl md:text-3xl font-bold text-gray-900">
-              Категории техники
+              {t('home.categories')}
             </h2>
-            <Link href="/ru/catalog" className="text-green-600 hover:text-green-700 font-medium flex items-center">
-              Все категории
+            <Link href="/catalog" className="text-green-600 hover:text-green-700 font-medium flex items-center">
+              {t('common.viewAll')}
               <ChevronRight className="ml-1 h-4 w-4" />
             </Link>
           </div>
@@ -137,14 +141,14 @@ export default function HomePage() {
             {categories.map((category) => {
               const IconComponent = categoryIcons[category.icon as keyof typeof categoryIcons] || Tractor;
               return (
-                <Link key={category.slug} href={`/ru/catalog/${category.slug}`}>
+                <Link key={category.slug} href={`/catalog`}>
                   <Card className="group hover:border-green-500 hover:shadow-lg transition-all duration-300 h-full">
                     <CardContent className="p-6 text-center">
                       <div className="w-16 h-16 mx-auto mb-4 bg-green-100 rounded-full flex items-center justify-center group-hover:bg-green-600 transition-colors">
                         <IconComponent className="h-8 w-8 text-green-600 group-hover:text-white transition-colors" />
                       </div>
                       <h3 className="font-semibold text-gray-900 mb-1">{category.name}</h3>
-                      <p className="text-sm text-gray-500">{category.count} товаров</p>
+                      <p className="text-sm text-gray-500">{t('catalog.found', { count: category.count })}</p>
                     </CardContent>
                   </Card>
                 </Link>
@@ -159,17 +163,17 @@ export default function HomePage() {
         <div className="max-w-7xl mx-auto px-4">
           <div className="flex justify-between items-center mb-8">
             <h2 className="text-2xl md:text-3xl font-bold text-gray-900">
-              Популярные товары
+              {t('home.featured')}
             </h2>
-            <Link href="/ru/catalog" className="text-green-600 hover:text-green-700 font-medium flex items-center">
-              Все товары
+            <Link href="/catalog" className="text-green-600 hover:text-green-700 font-medium flex items-center">
+              {t('common.viewAll')}
               <ChevronRight className="ml-1 h-4 w-4" />
             </Link>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
             {featuredProducts.map((product) => (
-              <Link key={product.id} href={`/ru/catalog/product/${product.slug}`}>
+              <Link key={product.id} href={`/catalog/product/${product.slug}`}>
                 <Card className="group hover:shadow-lg transition-all duration-300 h-full">
                   {/* Image placeholder */}
                   <div className="aspect-[4/3] bg-gray-200 flex items-center justify-center">
@@ -185,13 +189,13 @@ export default function HomePage() {
                         ${product.price.toLocaleString()}
                       </p>
                     ) : (
-                      <p className="text-lg font-medium text-gray-600">Запросить цену</p>
+                      <p className="text-lg font-medium text-gray-600">{t('product.requestPrice')}</p>
                     )}
                     <span className={`inline-block mt-2 text-xs font-medium px-2 py-1 rounded ${product.stock === 'in_stock'
-                        ? 'bg-green-100 text-green-700'
-                        : 'bg-blue-100 text-blue-700'
+                      ? 'bg-green-100 text-green-700'
+                      : 'bg-blue-100 text-blue-700'
                       }`}>
-                      {product.stock === 'in_stock' ? 'В наличии' : 'Под заказ'}
+                      {product.stock === 'in_stock' ? t('product.inStock') : t('product.preOrder')}
                     </span>
                   </CardContent>
                 </Card>
@@ -205,7 +209,7 @@ export default function HomePage() {
       <section className="py-16 bg-white">
         <div className="max-w-7xl mx-auto px-4">
           <h2 className="text-2xl md:text-3xl font-bold text-gray-900 text-center mb-12">
-            Почему выбирают нас
+            {t('home.whyUs.title')}
           </h2>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
@@ -237,12 +241,12 @@ export default function HomePage() {
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <a href="tel:+998711234567">
               <Button size="lg" variant="secondary">
-                +998 71 123 45 67
+                {t('product.call')}
               </Button>
             </a>
-            <Link href="/ru/contacts">
+            <Link href="/contacts">
               <Button size="lg" variant="outline" className="border-white text-white hover:bg-white/10">
-                Оставить заявку
+                {t('home.hero.contact')}
               </Button>
             </Link>
           </div>

@@ -1,9 +1,12 @@
+'use client';
+
 import Link from 'next/link';
 import Image from 'next/image';
 import { Card, CardContent } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
-import { cn, formatPriceUSD, getStockLabel, getStockColor } from '@/lib/utils';
+import { cn, formatPriceUSD } from '@/lib/utils';
 import type { Product } from '@/lib/api';
+import { useI18n } from '@/lib/i18n';
 
 interface ProductCardProps {
     product: Product;
@@ -11,9 +14,21 @@ interface ProductCardProps {
 }
 
 export function ProductCard({ product, showCompare = true }: ProductCardProps) {
+    const { t } = useI18n();
+
+    const getStatusLabel = (status: string) => {
+        switch (status) {
+            case 'in_stock': return t('product.inStock');
+            case 'low_stock': return t('product.lowStock');
+            case 'pre_order': return t('product.preOrder');
+            case 'out_of_stock': return t('product.outOfStock');
+            default: return status;
+        }
+    };
+
     return (
         <Card className="group hover:shadow-lg transition-shadow duration-300">
-            <Link href={`/ru/catalog/product/${product.slug}`}>
+            <Link href={`/catalog/product/${product.slug}`}>
                 {/* Image */}
                 <div className="relative aspect-[4/3] bg-gray-100 overflow-hidden">
                     {product.main_image ? (
@@ -34,7 +49,7 @@ export function ProductCard({ product, showCompare = true }: ProductCardProps) {
                     {/* Featured badge */}
                     {product.is_featured && (
                         <span className="absolute top-2 left-2 bg-amber-500 text-white text-xs font-medium px-2 py-1 rounded">
-                            Хит
+                            Hit
                         </span>
                     )}
 
@@ -46,7 +61,7 @@ export function ProductCard({ product, showCompare = true }: ProductCardProps) {
                         product.stock_status === 'pre_order' && 'bg-blue-100 text-blue-700',
                         product.stock_status === 'out_of_stock' && 'bg-red-100 text-red-700',
                     )}>
-                        {getStockLabel(product.stock_status)}
+                        {getStatusLabel(product.stock_status)}
                     </span>
                 </div>
             </Link>
@@ -56,14 +71,14 @@ export function ProductCard({ product, showCompare = true }: ProductCardProps) {
                 <p className="text-xs text-gray-500 mb-1">{product.brand.name}</p>
 
                 {/* Name */}
-                <Link href={`/ru/catalog/product/${product.slug}`}>
+                <Link href={`/catalog/product/${product.slug}`}>
                     <h3 className="font-semibold text-gray-900 mb-2 line-clamp-2 group-hover:text-green-600 transition-colors">
                         {product.name}
                     </h3>
                 </Link>
 
                 {/* SKU */}
-                <p className="text-xs text-gray-400 mb-3">Артикул: {product.sku}</p>
+                <p className="text-xs text-gray-400 mb-3">{t('product.sku')}: {product.sku}</p>
 
                 {/* Price */}
                 <div className="mb-4">
@@ -79,7 +94,7 @@ export function ProductCard({ product, showCompare = true }: ProductCardProps) {
                             )}
                         </div>
                     ) : (
-                        <p className="text-lg font-medium text-gray-600">Запросить цену</p>
+                        <p className="text-lg font-medium text-gray-600">{t('product.requestPrice')}</p>
                     )}
                 </div>
 
@@ -87,11 +102,11 @@ export function ProductCard({ product, showCompare = true }: ProductCardProps) {
                 <div className="flex gap-2">
                     {product.product_type === 'spare_part' ? (
                         <Button className="flex-1" size="sm">
-                            В корзину
+                            {t('product.addToCart')}
                         </Button>
                     ) : (
                         <Button className="flex-1" size="sm" variant="secondary">
-                            Запросить КП
+                            {t('product.requestQuote')}
                         </Button>
                     )}
                 </div>

@@ -4,6 +4,7 @@ import "./globals.css";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { BottomNav } from "@/components/layout/BottomNav";
+import { I18nProvider } from "@/lib/i18n";
 
 const inter = Inter({
   subsets: ["latin", "cyrillic"],
@@ -41,14 +42,16 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="ru">
+    <html lang="ru" suppressHydrationWarning>
       <body className={`${inter.className} antialiased bg-gray-50`}>
-        <Header />
-        <main className="min-h-screen pb-16 md:pb-0">
-          {children}
-        </main>
-        <Footer />
-        <BottomNav />
+        <I18nProvider>
+          <Header />
+          <main className="min-h-screen pb-16 md:pb-0">
+            {children}
+          </main>
+          <Footer />
+          <BottomNav />
+        </I18nProvider>
       </body>
     </html>
   );
