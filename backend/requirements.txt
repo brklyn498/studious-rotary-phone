@@ -1,0 +1,32 @@
+# ===========================
+# UzAgro Backend Dependencies
+# ===========================
+
+# Django Core
+Django>=5.0,<6.0
+djangorestframework>=3.15.0
+django-cors-headers>=4.3.0
+django-filter>=24.0
+
+# Authentication
+djangorestframework-simplejwt>=5.3.0
+PyJWT>=2.8.0
+
+# Database
+psycopg2-binary>=2.9.9  # PostgreSQL (production)
+dj-database-url>=2.1.0
+
+# Utilities
+python-dotenv>=1.0.0
+Pillow>=10.0.0  # Image processing
+python-slugify>=8.0.0
+
+# API Documentation
+drf-spectacular>=0.27.0
+
+# Development
+django-debug-toolbar>=4.2.0
+
+# Production (optional)
+gunicorn>=21.0.0
+whitenoise>=6.6.0

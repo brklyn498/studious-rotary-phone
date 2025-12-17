@@ -1,0 +1,51 @@
+import { HTMLAttributes, forwardRef } from 'react';
+import { cn } from '@/lib/utils';
+
+export interface CardProps extends HTMLAttributes<HTMLDivElement> {
+    variant?: 'default' | 'elevated' | 'outlined';
+}
+
+const Card = forwardRef<HTMLDivElement, CardProps>(
+    ({ className, variant = 'default', ...props }, ref) => {
+        return (
+            <div
+                ref={ref}
+                className={cn(
+                    'bg-white rounded-xl overflow-hidden',
+                    {
+                        'shadow-sm border border-gray-200': variant === 'default',
+                        'shadow-lg': variant === 'elevated',
+                        'border-2 border-gray-300': variant === 'outlined',
+                    },
+                    className
+                )}
+                {...props}
+            />
+        );
+    }
+);
+
+Card.displayName = 'Card';
+
+const CardHeader = forwardRef<HTMLDivElement, HTMLAttributes<HTMLDivElement>>(
+    ({ className, ...props }, ref) => (
+        <div ref={ref} className={cn('px-4 py-3 border-b border-gray-100', className)} {...props} />
+    )
+);
+CardHeader.displayName = 'CardHeader';
+
+const CardContent = forwardRef<HTMLDivElement, HTMLAttributes<HTMLDivElement>>(
+    ({ className, ...props }, ref) => (
+        <div ref={ref} className={cn('p-4', className)} {...props} />
+    )
+);
+CardContent.displayName = 'CardContent';
+
+const CardFooter = forwardRef<HTMLDivElement, HTMLAttributes<HTMLDivElement>>(
+    ({ className, ...props }, ref) => (
+        <div ref={ref} className={cn('px-4 py-3 border-t border-gray-100', className)} {...props} />
+    )
+);
+CardFooter.displayName = 'CardFooter';
+
+export { Card, CardHeader, CardContent, CardFooter };
