@@ -6,6 +6,7 @@ import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/Button';
 import { Card, CardContent } from '@/components/ui/Card';
 import { Eye, EyeOff, Phone, Lock, ArrowLeft } from 'lucide-react';
+import { authApi } from '@/lib/api/auth';
 
 export default function LoginPage() {
     const router = useRouter();
@@ -23,21 +24,21 @@ export default function LoginPage() {
         setError(null);
 
         try {
-            // Simulate login API call
-            await new Promise(resolve => setTimeout(resolve, 1500));
+            // API Call
+            const response = await authApi.login({
+                phone: formData.phone,
+                password: formData.password,
+            });
 
-            // For demo, check if phone matches a pattern
-            if (formData.phone.length < 9) {
-                throw new Error('Неверный номер телефона');
-            }
-            if (formData.password.length < 6) {
-                throw new Error('Неверный пароль');
-            }
+            // Save token (Example: local storage or cookie, ideally via userStore)
+            localStorage.setItem('accessToken', response.access);
+            localStorage.setItem('refreshToken', response.refresh);
 
-            // Successful login - redirect to home
+            // Redirect to home or callback url
             router.push('/');
         } catch (err) {
-            setError(err instanceof Error ? err.message : 'Ошибка входа');
+            console.error(err);
+            setError(err instanceof Error ? err.message : 'Ошибка входа. Проверьте номер и пароль.');
         } finally {
             setIsLoading(false);
         }
