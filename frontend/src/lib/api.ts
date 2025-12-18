@@ -11,7 +11,7 @@ interface FetchOptions extends RequestInit {
 /**
  * Generic API fetch function
  */
-async function apiFetch<T>(endpoint: string, options: FetchOptions = {}): Promise<T> {
+export async function apiFetch<T>(endpoint: string, options: FetchOptions = {}): Promise<T> {
     const { params, headers, ...rest } = options;
 
     // Build URL with query params
