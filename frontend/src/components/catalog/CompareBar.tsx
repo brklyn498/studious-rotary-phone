@@ -22,14 +22,14 @@ export function CompareBar() {
 
     return (
         <div className={cn(
-            "fixed bottom-20 md:bottom-4 left-1/2 -translate-x-1/2 z-40 w-[95%] max-w-4xl bg-white rounded-xl shadow-[0_8px_30px_rgb(0,0,0,0.12)] border border-gray-100 transition-all duration-300 transform",
+            "fixed bottom-20 md:bottom-4 left-1/2 -translate-x-1/2 z-40 w-[95%] max-w-4xl glass rounded-2xl shadow-2xl border-white/10 transition-all duration-500 transform",
             isOpen ? "translate-y-0 opacity-100" : "translate-y-[150%] opacity-0 pointer-events-none"
         )}>
             {/* Header / Mobile Toggle Handle */}
             <div className="absolute -top-10 left-1/2 -translate-x-1/2 md:hidden">
                 <button
                     onClick={() => toggleOpen(false)}
-                    className="bg-white rounded-t-lg px-4 py-1 shadow-md border-t border-x border-gray-100 text-xs font-medium text-gray-500"
+                    className="glass rounded-t-xl px-4 py-1.5 border-b-0 border-white/10 text-[10px] font-black uppercase tracking-widest text-primary-500"
                 >
                     {t('common.hide')}
                 </button>
@@ -41,7 +41,7 @@ export function CompareBar() {
                 <div className="flex items-center gap-3 w-full md:w-auto overflow-x-auto pb-2 md:pb-0 scrollbar-hide">
                     {items.map((item) => (
                         <div key={item.id} className="relative group shrink-0">
-                            <div className="w-14 h-14 md:w-16 md:h-16 rounded-lg bg-gray-50 border border-gray-200 overflow-hidden relative">
+                            <div className="w-14 h-14 md:w-16 md:h-16 rounded-xl bg-white/5 border border-white/10 overflow-hidden relative">
                                 {item.main_image ? (
                                     <Image
                                         src={item.main_image}
@@ -69,7 +69,7 @@ export function CompareBar() {
                     ))}
 
                     {items.length < 4 && (
-                        <div className="w-14 h-14 md:w-16 md:h-16 rounded-lg border-2 border-dashed border-gray-200 flex items-center justify-center text-gray-400 text-xs text-center shrink-0">
+                        <div className="w-14 h-14 md:w-16 md:h-16 rounded-xl border-2 border-dashed border-white/10 flex items-center justify-center text-gray-600 text-[10px] font-bold text-center shrink-0">
                             {items.length}/4
                         </div>
                     )}
@@ -85,14 +85,14 @@ export function CompareBar() {
                         variant="ghost"
                         size="sm"
                         onClick={clear}
-                        className="text-gray-500 hover:text-red-500"
+                        className="text-gray-500 hover:text-red-500 hover:bg-red-500/5 rounded-xl transition-all"
                     >
                         <Trash2 className="w-4 h-4 md:mr-2" />
-                        <span className="hidden md:inline">{t('common.clear')}</span>
+                        <span className="hidden md:inline font-bold uppercase tracking-widest text-[10px]">{t('common.clear')}</span>
                     </Button>
 
                     <Link href="/catalog/compare" className="flex-1 md:flex-none">
-                        <Button className="w-full bg-green-600 hover:bg-green-700 text-white shadow-lg shadow-green-600/20">
+                        <Button className="w-full font-bold uppercase tracking-widest text-[10px]" variant="premium">
                             {t('catalog.compareBtn')} <ArrowRight className="w-4 h-4 ml-2" />
                         </Button>
                     </Link>

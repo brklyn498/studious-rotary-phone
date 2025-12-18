@@ -8,65 +8,70 @@ export function Footer() {
     const { t } = useI18n();
 
     return (
-        <footer className="bg-gray-900 text-gray-300">
+        <footer className="bg-background border-t border-white/5 text-gray-400">
             {/* Main footer */}
-            <div className="max-w-7xl mx-auto px-4 py-12">
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+            <div className="max-w-7xl mx-auto px-4 py-16">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12">
                     {/* Company info */}
-                    <div>
-                        <div className="flex items-center gap-2 mb-4">
-                            <div className="w-10 h-10 bg-green-600 rounded-lg flex items-center justify-center">
-                                <span className="text-white font-bold text-xl">У</span>
+                    <div className="space-y-6">
+                        <Link href="/" className="flex items-center gap-3 group">
+                            <div className="w-10 h-10 bg-gradient-to-br from-primary-500 to-primary-700 rounded-xl flex items-center justify-center shadow-lg shadow-primary-500/20 group-hover:scale-105 transition-transform">
+                                <span className="text-white font-bold text-xl">U</span>
                             </div>
-                            <span className="text-xl font-bold text-white">УзАгро</span>
-                        </div>
-                        <p className="text-gray-400 mb-4">
+                            <div>
+                                <span className="text-xl font-bold tracking-tight text-white group-hover:text-primary-500 transition-colors">UzAgro</span>
+                                <p className="text-[10px] uppercase tracking-[0.2em] text-gray-500 font-semibold leading-none mt-1">Premium Machinery</p>
+                            </div>
+                        </Link>
+                        <p className="text-sm leading-relaxed text-gray-500">
                             {t('home.hero.subtitle')}
                         </p>
-                        <div className="space-y-2 text-sm">
-                            <a href="tel:+998711234567" className="flex items-center gap-2 hover:text-white">
-                                <Phone className="h-4 w-4" />
-                                +998 71 123 45 67
+                        <div className="flex gap-4">
+                            <a href="tel:+998711234567" className="w-10 h-10 rounded-xl glass flex items-center justify-center hover:text-primary-500 hover:border-primary-500/30 transition-all">
+                                <Phone size={18} />
                             </a>
-                            <a href="mailto:info@uzagro.uz" className="flex items-center gap-2 hover:text-white">
-                                <Mail className="h-4 w-4" />
-                                info@uzagro.uz
+                            <a href="mailto:info@uzagro.uz" className="w-10 h-10 rounded-xl glass flex items-center justify-center hover:text-primary-500 hover:border-primary-500/30 transition-all">
+                                <Mail size={18} />
                             </a>
                         </div>
                     </div>
 
                     {/* Catalog links */}
                     <div>
-                        <h3 className="text-white font-semibold mb-4">{t('footer.catalog')}</h3>
-                        <ul className="space-y-2 text-sm">
-                            <li><Link href="/catalog" className="hover:text-white">{t('footer.tractors')}</Link></li>
-                            <li><Link href="/catalog" className="hover:text-white">{t('footer.harvesters')}</Link></li>
-                            <li><Link href="/catalog" className="hover:text-white">{t('footer.implements')}</Link></li>
-                            <li><Link href="/catalog?type=spare_part" className="hover:text-white">{t('footer.spareParts')}</Link></li>
+                        <h3 className="text-white font-bold uppercase tracking-widest text-xs mb-6">{t('footer.catalog')}</h3>
+                        <ul className="space-y-3 text-sm">
+                            <li><Link href="/catalog" className="hover:text-primary-500 transition-colors">{t('footer.tractors')}</Link></li>
+                            <li><Link href="/catalog" className="hover:text-primary-500 transition-colors">{t('footer.harvesters')}</Link></li>
+                            <li><Link href="/catalog" className="hover:text-primary-500 transition-colors">{t('footer.implements')}</Link></li>
+                            <li><Link href="/catalog?type=spare_part" className="hover:text-primary-500 transition-colors">{t('footer.spareParts')}</Link></li>
                         </ul>
                     </div>
 
                     {/* Company links */}
                     <div>
-                        <h3 className="text-white font-semibold mb-4">{t('footer.company')}</h3>
-                        <ul className="space-y-2 text-sm">
-                            <li><Link href="/about" className="hover:text-white">{t('footer.aboutUs')}</Link></li>
-                            <li><Link href="/contacts" className="hover:text-white">{t('footer.contacts')}</Link></li>
-                            <li><Link href="/services" className="hover:text-white">{t('footer.leasing')}</Link></li>
-                            <li><Link href="/services" className="hover:text-white">{t('footer.delivery')}</Link></li>
+                        <h3 className="text-white font-bold uppercase tracking-widest text-xs mb-6">{t('footer.company')}</h3>
+                        <ul className="space-y-3 text-sm">
+                            <li><Link href="/about" className="hover:text-primary-500 transition-colors">{t('footer.aboutUs')}</Link></li>
+                            <li><Link href="/contacts" className="hover:text-primary-500 transition-colors">{t('footer.contacts')}</Link></li>
+                            <li><Link href="/services" className="hover:text-primary-500 transition-colors">{t('footer.leasing')}</Link></li>
+                            <li><Link href="/services" className="hover:text-primary-500 transition-colors">{t('footer.delivery')}</Link></li>
                         </ul>
                     </div>
 
                     {/* Contact info */}
                     <div>
-                        <h3 className="text-white font-semibold mb-4">{t('footer.contacts')}</h3>
-                        <div className="space-y-3 text-sm">
-                            <div className="flex items-start gap-2">
-                                <MapPin className="h-4 w-4 mt-1 flex-shrink-0" />
-                                <span>г. Ташкент, ул. Буюк Ипак Йули, 15</span>
+                        <h3 className="text-white font-bold uppercase tracking-widest text-xs mb-6">{t('footer.contacts')}</h3>
+                        <div className="space-y-4 text-sm">
+                            <div className="flex items-start gap-3">
+                                <div className="p-2 glass rounded-lg mt-1">
+                                    <MapPin size={14} className="text-primary-500" />
+                                </div>
+                                <span className="leading-relaxed">г. Ташкент, ул. Буюк Ипак Йули, 15</span>
                             </div>
-                            <div className="flex items-center gap-2">
-                                <Clock className="h-4 w-4 flex-shrink-0" />
+                            <div className="flex items-start gap-3">
+                                <div className="p-2 glass rounded-lg mt-1">
+                                    <Clock size={14} className="text-primary-500" />
+                                </div>
                                 <span>{t('common.workingHours')}</span>
                             </div>
                         </div>
@@ -75,13 +80,13 @@ export function Footer() {
             </div>
 
             {/* Copyright */}
-            <div className="border-t border-gray-800">
-                <div className="max-w-7xl mx-auto px-4 py-4">
-                    <div className="flex flex-col md:flex-row justify-between items-center gap-4 text-sm">
-                        <p>© 2025 УзАгро. {t('common.allRightsReserved')}.</p>
-                        <div className="flex gap-4">
-                            <Link href="/privacy" className="hover:text-white">Privacy Policy</Link>
-                            <Link href="/terms" className="hover:text-white">Terms of Use</Link>
+            <div className="border-t border-white/5 py-8">
+                <div className="max-w-7xl mx-auto px-4">
+                    <div className="flex flex-col md:flex-row justify-between items-center gap-6 text-xs font-medium text-gray-500">
+                        <p>© 2025 UzAgro. {t('common.allRightsReserved')}.</p>
+                        <div className="flex gap-8">
+                            <Link href="/privacy" className="hover:text-white transition-colors">Privacy Policy</Link>
+                            <Link href="/terms" className="hover:text-white transition-colors">Terms of Use</Link>
                         </div>
                     </div>
                 </div>

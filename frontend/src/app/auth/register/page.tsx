@@ -3,9 +3,10 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
+import { motion, AnimatePresence } from 'framer-motion';
 import { Button } from '@/components/ui/Button';
 import { Card, CardContent } from '@/components/ui/Card';
-import { Eye, EyeOff, Phone, Lock, User, Building2, ArrowLeft, CheckCircle } from 'lucide-react';
+import { Eye, EyeOff, Phone, Lock, User, Building2, ArrowLeft, CheckCircle, Zap, ShieldCheck, Mail, MapPin } from 'lucide-react';
 import { authApi } from '@/lib/api/auth';
 
 type UserType = 'farmer' | 'business';
@@ -30,20 +31,8 @@ export default function RegisterPage() {
     const [error, setError] = useState<string | null>(null);
 
     const regions = [
-        'Ташкент',
-        'Ташкентская область',
-        'Самарканд',
-        'Бухара',
-        'Андижан',
-        'Фергана',
-        'Наманган',
-        'Навои',
-        'Кашкадарья',
-        'Сурхандарья',
-        'Хорезм',
-        'Каракалпакстан',
-        'Джизак',
-        'Сырдарья',
+        'Ташкент', 'Самарканд', 'Бухара', 'Андижан', 'Фергана', 'Наманган', 'Навои',
+        'Кашкадарья', 'Сурхандарья', 'Хорезм', 'Каракалпакстан', 'Джизак', 'Сырдарья',
     ];
 
     const handleSubmit = async (e: React.FormEvent) => {
@@ -52,7 +41,6 @@ export default function RegisterPage() {
         setError(null);
 
         try {
-            // Validation
             if (formData.password !== formData.confirmPassword) {
                 throw new Error('Пароли не совпадают');
             }
@@ -96,327 +84,272 @@ export default function RegisterPage() {
         setError(null);
     };
 
-    const nextStep = () => {
-        if (step === 1) {
-            setStep(2);
-        }
-    };
+    const nextStep = () => step === 1 && setStep(2);
+    const prevStep = () => step === 2 && setStep(1);
 
-    const prevStep = () => {
-        if (step === 2) {
-            setStep(1);
-        }
+    const stepVariants = {
+        hidden: { opacity: 0, x: 20 },
+        visible: { opacity: 1, x: 0 },
+        exit: { opacity: 0, x: -20 }
     };
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-green-50 to-green-100 flex items-center justify-center p-4">
-            <div className="w-full max-w-md">
-                {/* Back link */}
+        <div className="min-h-screen bg-background flex items-center justify-center p-4 relative overflow-hidden">
+            {/* Background Decorative Elements */}
+            <div className="absolute inset-0 overflow-hidden pointer-events-none">
+                <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-primary-500/10 blur-[120px] rounded-full" />
+                <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-accent-500/10 blur-[120px] rounded-full" />
+                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full opacity-[0.02] pointer-events-none">
+                    <div className="absolute inset-0 bg-[url('/grid.svg')] bg-center" />
+                </div>
+            </div>
+
+            <div className="w-full max-w-xl relative z-10">
                 {step < 3 && (
-                    <Link
-                        href="/"
-                        className="inline-flex items-center text-gray-600 hover:text-green-600 mb-6"
-                    >
-                        <ArrowLeft className="h-4 w-4 mr-2" />
-                        На главную
-                    </Link>
+                    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
+                        <Link
+                            href="/"
+                            className="inline-flex items-center text-[10px] font-black uppercase tracking-[0.3em] text-gray-500 hover:text-white mb-8 transition-colors group"
+                        >
+                            <ArrowLeft className="h-4 w-4 mr-2 group-hover:-translate-x-1 transition-transform" />
+                            На главную
+                        </Link>
+                    </motion.div>
                 )}
 
-                <Card className="shadow-xl">
-                    <CardContent className="p-8">
-                        {/* Logo */}
-                        <div className="text-center mb-8">
-                            <Link href="/" className="inline-flex items-center gap-2">
-                                <div className="w-12 h-12 bg-green-600 rounded-xl flex items-center justify-center">
-                                    <span className="text-white font-bold text-2xl">У</span>
-                                </div>
-                                <span className="text-2xl font-bold text-green-800">УзАгро</span>
-                            </Link>
-                        </div>
+                <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
+                    <Card className="glass border-white/5 shadow-2xl overflow-hidden rounded-[2.5rem]">
+                        <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-primary-500/50 to-transparent" />
 
-                        {/* Step 1: Choose account type */}
-                        {step === 1 && (
-                            <div>
-                                <h1 className="text-2xl font-bold text-gray-900 text-center mb-2">
-                                    Регистрация
-                                </h1>
-                                <p className="text-gray-600 text-center mb-8">
-                                    Выберите тип аккаунта
-                                </p>
-
-                                <div className="space-y-4 mb-8">
-                                    <button
-                                        type="button"
-                                        onClick={() => setUserType('farmer')}
-                                        className={`w-full p-4 border-2 rounded-xl text-left transition-all ${userType === 'farmer'
-                                                ? 'border-green-600 bg-green-50'
-                                                : 'border-gray-200 hover:border-gray-300'
-                                            }`}
+                        <CardContent className="p-8 sm:p-12">
+                            <AnimatePresence mode="wait">
+                                {step === 1 && (
+                                    <motion.div
+                                        key="step1"
+                                        variants={stepVariants}
+                                        initial="hidden"
+                                        animate="visible"
+                                        exit="exit"
+                                        className="space-y-10"
                                     >
-                                        <div className="flex items-start gap-4">
-                                            <div className={`w-12 h-12 rounded-full flex items-center justify-center ${userType === 'farmer' ? 'bg-green-600 text-white' : 'bg-gray-100 text-gray-600'
-                                                }`}>
-                                                <User className="h-6 w-6" />
+                                        <div className="text-center">
+                                            <div className="flex justify-center mb-8">
+                                                <div className="w-16 h-16 bg-white/5 rounded-2xl flex items-center justify-center border border-white/10 relative overflow-hidden">
+                                                    <div className="absolute inset-0 bg-primary-500/10 blur-xl" />
+                                                    <User className="w-8 h-8 text-primary-500 relative z-10" />
+                                                </div>
                                             </div>
-                                            <div>
-                                                <h3 className="font-semibold text-gray-900">Фермер / Физическое лицо</h3>
-                                                <p className="text-sm text-gray-600 mt-1">
-                                                    Для индивидуальных покупателей и небольших хозяйств
-                                                </p>
-                                            </div>
+                                            <h1 className="text-3xl font-black text-white uppercase tracking-tighter mb-2">Регистрация</h1>
+                                            <p className="text-[10px] font-black text-gray-500 uppercase tracking-[0.3em]">Выберите тип профиля</p>
                                         </div>
-                                    </button>
 
-                                    <button
-                                        type="button"
-                                        onClick={() => setUserType('business')}
-                                        className={`w-full p-4 border-2 rounded-xl text-left transition-all ${userType === 'business'
-                                                ? 'border-green-600 bg-green-50'
-                                                : 'border-gray-200 hover:border-gray-300'
-                                            }`}
-                                    >
-                                        <div className="flex items-start gap-4">
-                                            <div className={`w-12 h-12 rounded-full flex items-center justify-center ${userType === 'business' ? 'bg-green-600 text-white' : 'bg-gray-100 text-gray-600'
-                                                }`}>
-                                                <Building2 className="h-6 w-6" />
-                                            </div>
-                                            <div>
-                                                <h3 className="font-semibold text-gray-900">Бизнес / Организация</h3>
-                                                <p className="text-sm text-gray-600 mt-1">
-                                                    Для юридических лиц с верификацией через ИНН
-                                                </p>
-                                            </div>
-                                        </div>
-                                    </button>
-                                </div>
-
-                                <Button size="lg" className="w-full" onClick={nextStep}>
-                                    Продолжить
-                                </Button>
-
-                                <p className="text-center text-gray-600 mt-6">
-                                    Уже есть аккаунт?{' '}
-                                    <Link href="/auth/login" className="text-green-600 hover:text-green-700 font-medium">
-                                        Войти
-                                    </Link>
-                                </p>
-                            </div>
-                        )}
-
-                        {/* Step 2: Registration form */}
-                        {step === 2 && (
-                            <div>
-                                <button
-                                    type="button"
-                                    onClick={prevStep}
-                                    className="flex items-center text-gray-600 hover:text-green-600 mb-6"
-                                >
-                                    <ArrowLeft className="h-4 w-4 mr-2" />
-                                    Назад
-                                </button>
-
-                                <h1 className="text-2xl font-bold text-gray-900 text-center mb-2">
-                                    {userType === 'business' ? 'Регистрация бизнеса' : 'Регистрация'}
-                                </h1>
-                                <p className="text-gray-600 text-center mb-8">
-                                    Заполните данные для создания аккаунта
-                                </p>
-
-                                {/* Error message */}
-                                {error && (
-                                    <div className="mb-6 p-4 bg-red-50 border border-red-200 text-red-700 rounded-lg text-sm">
-                                        {error}
-                                    </div>
-                                )}
-
-                                <form onSubmit={handleSubmit} className="space-y-4">
-                                    <div>
-                                        <label className="block text-sm font-medium text-gray-700 mb-2">
-                                            {userType === 'business' ? 'Контактное лицо' : 'Ваше имя'} *
-                                        </label>
-                                        <input
-                                            type="text"
-                                            name="name"
-                                            value={formData.name}
-                                            onChange={handleChange}
-                                            required
-                                            placeholder="Алишер Каримов"
-                                            className="w-full h-12 px-4 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 outline-none"
-                                        />
-                                    </div>
-
-                                    {userType === 'business' && (
-                                        <>
-                                            <div>
-                                                <label className="block text-sm font-medium text-gray-700 mb-2">
-                                                    Название компании *
-                                                </label>
-                                                <input
-                                                    type="text"
-                                                    name="companyName"
-                                                    value={formData.companyName}
-                                                    onChange={handleChange}
-                                                    required
-                                                    placeholder='ООО "Агрохолдинг"'
-                                                    className="w-full h-12 px-4 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 outline-none"
-                                                />
-                                            </div>
-
-                                            <div>
-                                                <label className="block text-sm font-medium text-gray-700 mb-2">
-                                                    ИНН (для верификации)
-                                                </label>
-                                                <input
-                                                    type="text"
-                                                    name="inn"
-                                                    value={formData.inn}
-                                                    onChange={handleChange}
-                                                    placeholder="123456789"
-                                                    maxLength={9}
-                                                    className="w-full h-12 px-4 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 outline-none"
-                                                />
-                                                <p className="text-xs text-gray-500 mt-1">
-                                                    Введите ИНН для получения B2B условий и оптовых цен
-                                                </p>
-                                            </div>
-                                        </>
-                                    )}
-
-                                    <div>
-                                        <label className="block text-sm font-medium text-gray-700 mb-2">
-                                            Номер телефона *
-                                        </label>
-                                        <div className="relative">
-                                            <input
-                                                type="tel"
-                                                name="phone"
-                                                value={formData.phone}
-                                                onChange={handleChange}
-                                                required
-                                                placeholder="+998 90 123 45 67"
-                                                className="w-full h-12 pl-12 pr-4 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 outline-none"
-                                            />
-                                            <Phone className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400" />
-                                        </div>
-                                    </div>
-
-                                    <div>
-                                        <label className="block text-sm font-medium text-gray-700 mb-2">
-                                            Email
-                                        </label>
-                                        <input
-                                            type="email"
-                                            name="email"
-                                            value={formData.email}
-                                            onChange={handleChange}
-                                            placeholder="email@example.com"
-                                            className="w-full h-12 px-4 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 outline-none"
-                                        />
-                                    </div>
-
-                                    <div>
-                                        <label className="block text-sm font-medium text-gray-700 mb-2">
-                                            Регион
-                                        </label>
-                                        <select
-                                            name="region"
-                                            value={formData.region}
-                                            onChange={handleChange}
-                                            className="w-full h-12 px-4 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 outline-none bg-white"
-                                        >
-                                            <option value="">Выберите регион</option>
-                                            {regions.map((region) => (
-                                                <option key={region} value={region}>{region}</option>
-                                            ))}
-                                        </select>
-                                    </div>
-
-                                    <div>
-                                        <label className="block text-sm font-medium text-gray-700 mb-2">
-                                            Пароль *
-                                        </label>
-                                        <div className="relative">
-                                            <input
-                                                type={showPassword ? 'text' : 'password'}
-                                                name="password"
-                                                value={formData.password}
-                                                onChange={handleChange}
-                                                required
-                                                placeholder="Минимум 6 символов"
-                                                className="w-full h-12 pl-12 pr-12 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 outline-none"
-                                            />
-                                            <Lock className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400" />
+                                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                             <button
                                                 type="button"
-                                                onClick={() => setShowPassword(!showPassword)}
-                                                className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                                                onClick={() => setUserType('farmer')}
+                                                className={`group p-6 rounded-3xl border-2 text-left transition-all relative overflow-hidden ${userType === 'farmer' ? 'border-primary-500/50 bg-primary-500/5' : 'border-white/5 bg-white/5 hover:border-white/10'
+                                                    }`}
                                             >
-                                                {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
+                                                {userType === 'farmer' && (
+                                                    <motion.div layoutId="activeType" className="absolute inset-0 bg-primary-500/5 pointer-events-none" />
+                                                )}
+                                                <div className={`w-12 h-12 rounded-2xl flex items-center justify-center mb-6 transition-colors ${userType === 'farmer' ? 'bg-primary-500 text-white' : 'bg-white/5 text-gray-500'
+                                                    }`}>
+                                                    <User className="h-6 w-6" />
+                                                </div>
+                                                <h3 className="font-black text-white uppercase tracking-tight mb-2">Фермер</h3>
+                                                <p className="text-[10px] font-bold text-gray-500 uppercase leading-relaxed">Для индивидуальных покупателей и хозяйств</p>
+                                            </button>
+
+                                            <button
+                                                type="button"
+                                                onClick={() => setUserType('business')}
+                                                className={`group p-6 rounded-3xl border-2 text-left transition-all relative overflow-hidden ${userType === 'business' ? 'border-primary-500/50 bg-primary-500/5' : 'border-white/5 bg-white/5 hover:border-white/10'
+                                                    }`}
+                                            >
+                                                {userType === 'business' && (
+                                                    <motion.div layoutId="activeType" className="absolute inset-0 bg-primary-500/5 pointer-events-none" />
+                                                )}
+                                                <div className={`w-12 h-12 rounded-2xl flex items-center justify-center mb-6 transition-colors ${userType === 'business' ? 'bg-primary-500 text-white' : 'bg-white/5 text-gray-500'
+                                                    }`}>
+                                                    <Building2 className="h-6 w-6" />
+                                                </div>
+                                                <h3 className="font-black text-white uppercase tracking-tight mb-2">Бизнес</h3>
+                                                <p className="text-[10px] font-bold text-gray-500 uppercase leading-relaxed">Для юридических лиц с проверкой ИНН</p>
                                             </button>
                                         </div>
-                                    </div>
 
-                                    <div>
-                                        <label className="block text-sm font-medium text-gray-700 mb-2">
-                                            Подтвердите пароль *
-                                        </label>
-                                        <input
-                                            type="password"
-                                            name="confirmPassword"
-                                            value={formData.confirmPassword}
-                                            onChange={handleChange}
-                                            required
-                                            placeholder="Повторите пароль"
-                                            className="w-full h-12 px-4 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 outline-none"
-                                        />
-                                    </div>
+                                        <Button size="xl" className="w-full h-16 rounded-2xl font-black uppercase tracking-widest variant-premium" variant="premium" onClick={nextStep}>
+                                            Продолжить
+                                        </Button>
 
-                                    <label className="flex items-start gap-3 py-2">
-                                        <input
-                                            type="checkbox"
-                                            name="agreeToTerms"
-                                            checked={formData.agreeToTerms}
-                                            onChange={handleChange}
-                                            className="w-5 h-5 mt-0.5 text-green-600 border-gray-300 rounded focus:ring-green-500"
-                                        />
-                                        <span className="text-sm text-gray-600">
-                                            Я соглашаюсь с{' '}
-                                            <Link href="/terms" className="text-green-600 hover:underline">
-                                                условиями использования
-                                            </Link>{' '}
-                                            и{' '}
-                                            <Link href="/privacy" className="text-green-600 hover:underline">
-                                                политикой конфиденциальности
+                                        <p className="text-center text-[10px] font-black uppercase tracking-[0.2em] text-gray-500">
+                                            Уже есть аккаунт?{' '}
+                                            <Link href="/auth/login" className="text-primary-500 hover:text-white transition-colors ml-1">
+                                                Войти в систему
                                             </Link>
-                                        </span>
-                                    </label>
+                                        </p>
+                                    </motion.div>
+                                )}
 
-                                    <Button type="submit" size="lg" isLoading={isLoading} className="w-full">
-                                        Зарегистрироваться
-                                    </Button>
-                                </form>
-                            </div>
-                        )}
+                                {step === 2 && (
+                                    <motion.div
+                                        key="step2"
+                                        variants={stepVariants}
+                                        initial="hidden"
+                                        animate="visible"
+                                        exit="exit"
+                                        className="space-y-8"
+                                    >
+                                        <button onClick={prevStep} className="flex items-center text-[10px] font-black uppercase tracking-[0.2em] text-gray-500 hover:text-white transition-colors mb-4">
+                                            <ArrowLeft className="h-4 w-4 mr-2" /> Назад
+                                        </button>
 
-                        {/* Step 3: Success */}
-                        {step === 3 && (
-                            <div className="text-center py-8">
-                                <div className="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
-                                    <CheckCircle className="h-10 w-10 text-green-600" />
-                                </div>
-                                <h1 className="text-2xl font-bold text-gray-900 mb-2">
-                                    Регистрация завершена!
-                                </h1>
-                                <p className="text-gray-600 mb-8">
-                                    Аккаунт успешно создан. Мы отправили SMS с кодом подтверждения на указанный номер телефона.
-                                </p>
-                                <Button size="lg" onClick={() => router.push('/auth/login')} className="w-full">
-                                    Войти в аккаунт
-                                </Button>
-                            </div>
-                        )}
-                    </CardContent>
-                </Card>
+                                        <div>
+                                            <h1 className="text-3xl font-black text-white uppercase tracking-tighter mb-2">
+                                                {userType === 'business' ? 'Данные организации' : 'Личные данные'}
+                                            </h1>
+                                            <p className="text-[10px] font-black text-gray-500 uppercase tracking-[0.3em]">Заполните форму для регистрации</p>
+                                        </div>
+
+                                        {error && (
+                                            <div className="p-4 bg-red-500/10 border border-red-500/20 text-red-500 rounded-2xl text-[10px] font-black uppercase text-center">
+                                                {error}
+                                            </div>
+                                        )}
+
+                                        <form onSubmit={handleSubmit} className="space-y-6">
+                                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                                                <div>
+                                                    <label className="block text-[10px] font-black text-gray-500 uppercase tracking-[0.2em] mb-2 px-1">ФИО *</label>
+                                                    <div className="relative group">
+                                                        <input type="text" name="name" value={formData.name} onChange={handleChange} required placeholder="Алишер Каримов"
+                                                            className="w-full h-12 px-4 bg-white/5 border border-white/10 rounded-xl focus:ring-2 focus:ring-primary-500/50 outline-none text-white text-sm" />
+                                                    </div>
+                                                </div>
+
+                                                <div>
+                                                    <label className="block text-[10px] font-black text-gray-500 uppercase tracking-[0.2em] mb-2 px-1">Телефон *</label>
+                                                    <div className="relative group">
+                                                        <input type="tel" name="phone" value={formData.phone} onChange={handleChange} required placeholder="+998"
+                                                            className="w-full h-12 pl-12 pr-4 bg-white/5 border border-white/10 rounded-xl focus:ring-2 focus:ring-primary-500/50 outline-none text-white text-sm" />
+                                                        <Phone className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-500" />
+                                                    </div>
+                                                </div>
+
+                                                {userType === 'business' && (
+                                                    <>
+                                                        <div className="sm:col-span-2">
+                                                            <label className="block text-[10px] font-black text-gray-500 uppercase tracking-[0.2em] mb-2 px-1">Компания *</label>
+                                                            <div className="relative group">
+                                                                <input type="text" name="companyName" value={formData.companyName} onChange={handleChange} required placeholder='ООО "AGRO GROUP"'
+                                                                    className="w-full h-12 px-4 bg-white/5 border border-white/10 rounded-xl focus:ring-2 focus:ring-primary-500/50 outline-none text-white text-sm" />
+                                                            </div>
+                                                        </div>
+                                                        <div className="sm:col-span-2">
+                                                            <label className="block text-[10px] font-black text-gray-500 uppercase tracking-[0.2em] mb-2 px-1">ИНН</label>
+                                                            <div className="relative group">
+                                                                <input type="text" name="inn" value={formData.inn} onChange={handleChange} placeholder="123456789" maxLength={9}
+                                                                    className="w-full h-12 px-4 bg-white/5 border border-white/10 rounded-xl focus:ring-2 focus:ring-primary-500/50 outline-none text-white text-sm" />
+                                                            </div>
+                                                        </div>
+                                                    </>
+                                                )}
+
+                                                <div>
+                                                    <label className="block text-[10px] font-black text-gray-500 uppercase tracking-[0.2em] mb-2 px-1">Email</label>
+                                                    <div className="relative group">
+                                                        <input type="email" name="email" value={formData.email} onChange={handleChange} placeholder="mail@example.com"
+                                                            className="w-full h-12 pl-12 pr-4 bg-white/5 border border-white/10 rounded-xl focus:ring-2 focus:ring-primary-500/50 outline-none text-white text-sm" />
+                                                        <Mail className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-500" />
+                                                    </div>
+                                                </div>
+
+                                                <div>
+                                                    <label className="block text-[10px] font-black text-gray-500 uppercase tracking-[0.2em] mb-2 px-1">Регион</label>
+                                                    <div className="relative group">
+                                                        <select name="region" value={formData.region} onChange={handleChange}
+                                                            className="w-full h-12 pl-12 pr-10 bg-white/5 border border-white/10 rounded-xl focus:ring-2 focus:ring-primary-500/50 outline-none text-white text-sm appearance-none cursor-pointer">
+                                                            <option value="" className="bg-background text-white">Выбрать...</option>
+                                                            {regions.map(r => <option key={r} value={r} className="bg-background text-white">{r}</option>)}
+                                                        </select>
+                                                        <MapPin className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-500 pointer-events-none" />
+                                                    </div>
+                                                </div>
+
+                                                <div>
+                                                    <label className="block text-[10px] font-black text-gray-500 uppercase tracking-[0.2em] mb-2 px-1">Пароль *</label>
+                                                    <div className="relative group">
+                                                        <input type={showPassword ? 'text' : 'password'} name="password" value={formData.password} onChange={handleChange} required placeholder="••••••"
+                                                            className="w-full h-12 pl-12 pr-12 bg-white/5 border border-white/10 rounded-xl focus:ring-2 focus:ring-primary-500/50 outline-none text-white text-sm" />
+                                                        <Lock className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-500" />
+                                                        <button type="button" onClick={() => setShowPassword(!showPassword)} className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-500 hover:text-white transition-colors">
+                                                            {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                                                        </button>
+                                                    </div>
+                                                </div>
+
+                                                <div>
+                                                    <label className="block text-[10px] font-black text-gray-500 uppercase tracking-[0.2em] mb-2 px-1">Повтор *</label>
+                                                    <div className="relative group">
+                                                        <input type="password" name="confirmPassword" value={formData.confirmPassword} onChange={handleChange} required placeholder="••••••"
+                                                            className="w-full h-12 px-4 bg-white/5 border border-white/10 rounded-xl focus:ring-2 focus:ring-primary-500/50 outline-none text-white text-sm" />
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <label className="flex items-start gap-3 py-2 cursor-pointer group">
+                                                <input type="checkbox" name="agreeToTerms" checked={formData.agreeToTerms} onChange={handleChange}
+                                                    className="w-5 h-5 mt-1 rounded border-white/10 bg-white/5 text-primary-500 focus:ring-primary-500/50" />
+                                                <span className="text-[10px] font-bold text-gray-500 uppercase leading-relaxed group-hover:text-gray-400 transition-colors">
+                                                    Я соглашаюсь с <Link href="/terms" className="text-primary-500 underline underline-offset-4">условиями</Link> и <Link href="/privacy" className="text-primary-500 underline underline-offset-4">политикой конфиденциальности</Link>
+                                                </span>
+                                            </label>
+
+                                            <Button type="submit" size="xl" isLoading={isLoading} className="w-full h-16 rounded-2xl font-black uppercase tracking-widest variant-premium" variant="premium">
+                                                Создать профиль
+                                            </Button>
+                                        </form>
+                                    </motion.div>
+                                )}
+
+                                {step === 3 && (
+                                    <motion.div
+                                        key="step3"
+                                        variants={stepVariants}
+                                        initial="hidden"
+                                        animate="visible"
+                                        className="text-center py-10 space-y-8"
+                                    >
+                                        <div className="w-24 h-24 bg-primary-500/10 rounded-[2.5rem] flex items-center justify-center mx-auto relative overflow-hidden">
+                                            <div className="absolute inset-0 bg-primary-500 blur-2xl opacity-20" />
+                                            <CheckCircle className="h-12 w-12 text-primary-500 relative z-10" />
+                                        </div>
+                                        <div className="space-y-4">
+                                            <h1 className="text-3xl font-black text-white uppercase tracking-tighter">Успешно!</h1>
+                                            <p className="text-[11px] font-bold text-gray-500 uppercase leading-relaxed max-w-sm mx-auto tracking-wider">
+                                                Аккаунт {userType === 'business' ? 'бизнес-профиля' : 'пользователя'} создан. Мы отправили SMS с кодом подтверждения на указанный номер.
+                                            </p>
+                                        </div>
+                                        <Button size="xl" onClick={() => router.push('/auth/login')} className="w-full h-16 rounded-2xl font-black uppercase tracking-widest variant-premium" variant="premium">
+                                            Войти в аккаунт
+                                        </Button>
+                                    </motion.div>
+                                )}
+                            </AnimatePresence>
+                        </CardContent>
+                    </Card>
+                </motion.div>
+
+                <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.8 }}
+                    className="flex justify-center mt-10 gap-8">
+                    <div className="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-gray-600">
+                        <ShieldCheck className="w-4 h-4 text-primary-500/50" /> SSL SECURE
+                    </div>
+                    <div className="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-gray-600">
+                        <Zap className="w-4 h-4 text-primary-500/50" /> FAST ACCESS
+                    </div>
+                </motion.div>
             </div>
         </div>
     );

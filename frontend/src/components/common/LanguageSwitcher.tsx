@@ -107,8 +107,8 @@ export function LanguageSwitcher({
                         className={cn(
                             "px-3 py-1.5 text-sm rounded-lg transition-all duration-200 font-medium border border-transparent flex items-center gap-2",
                             locale === loc
-                                ? "bg-white text-green-700 shadow-sm border-gray-100"
-                                : "text-gray-600 hover:bg-gray-100/80 hover:text-gray-900"
+                                ? "bg-primary-500/10 text-primary-500 shadow-sm border-primary-500/20"
+                                : "text-gray-400 hover:bg-white/5 hover:text-white"
                         )}
                     >
                         {showFlag && <FlagIcon locale={loc} className="w-4" />}
@@ -128,7 +128,7 @@ export function LanguageSwitcher({
                     setLocale(locales[nextIndex]);
                 }}
                 className={cn(
-                    "flex items-center gap-2 px-2 py-1 text-sm font-medium text-gray-600 hover:text-green-600 hover:bg-gray-100 rounded transition-colors",
+                    "flex items-center gap-2 px-2 py-1 text-sm font-medium text-gray-400 hover:text-primary-500 hover:bg-white/5 rounded transition-colors",
                     className
                 )}
                 aria-label="Switch language"
@@ -147,8 +147,8 @@ export function LanguageSwitcher({
                 className={cn(
                     "flex items-center gap-2.5 px-3 py-2 text-sm font-medium rounded-full transition-all duration-200 border",
                     isOpen
-                        ? "bg-white border-green-200 text-green-700 shadow-sm ring-2 ring-green-100"
-                        : "bg-white/80 border-gray-200 text-gray-700 hover:bg-white hover:border-gray-300 hover:shadow-sm"
+                        ? "bg-primary-500/10 border-primary-500/30 text-primary-500 shadow-lg shadow-primary-500/10 ring-1 ring-primary-500/20"
+                        : "bg-white/5 border-white/5 text-gray-400 hover:bg-white/10 hover:border-white/10 hover:text-white"
                 )}
             >
                 {showFlag ? (
@@ -174,7 +174,7 @@ export function LanguageSwitcher({
             {/* Dropdown Menu */}
             <div
                 className={cn(
-                    "absolute right-0 top-full mt-2 w-48 bg-white border border-gray-100 rounded-xl shadow-xl z-50 overflow-hidden transition-all duration-200 origin-top-right p-1",
+                    "absolute right-0 top-full mt-2 w-48 glass rounded-xl shadow-2xl z-50 overflow-hidden transition-all duration-300 origin-top-right p-1",
                     isOpen
                         ? "opacity-100 translate-y-0 scale-100"
                         : "opacity-0 -translate-y-2 scale-95 pointer-events-none"
@@ -187,15 +187,15 @@ export function LanguageSwitcher({
                         className={cn(
                             "w-full flex items-center justify-between px-3 py-2.5 text-sm rounded-lg transition-colors group",
                             locale === loc
-                                ? "bg-green-50/80 text-green-700 font-medium"
-                                : "text-gray-600 hover:bg-gray-50 hover:text-gray-900"
+                                ? "bg-primary-500/10 text-primary-500 font-bold"
+                                : "text-gray-400 hover:bg-white/5 hover:text-white"
                         )}
                     >
                         <span className="flex items-center gap-3">
                             {showFlag && <FlagIcon locale={loc} />}
                             <span>{getLocaleName(loc)}</span>
                         </span>
-                        {locale === loc && <Check className="h-4 w-4 text-green-600" />}
+                        {locale === loc && <Check className="h-4 w-4 text-primary-500" />}
                     </button>
                 ))}
             </div>

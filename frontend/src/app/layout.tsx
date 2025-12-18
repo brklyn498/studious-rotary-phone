@@ -45,7 +45,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="ru" suppressHydrationWarning>
-      <body className={`${inter.className} antialiased bg-gray-50`}>
+      <body className={`${inter.className} antialiased`}>
         <I18nProvider>
           <Header />
           <main className="min-h-screen pb-16 md:pb-0">

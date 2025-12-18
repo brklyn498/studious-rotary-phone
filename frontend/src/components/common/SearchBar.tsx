@@ -148,7 +148,7 @@ export function SearchBar() {
                     onFocus={() => setIsOpen(true)}
                     onKeyDown={handleKeyDown}
                     placeholder={t('common.searchPlaceholder')}
-                    className="w-full h-10 pl-10 pr-10 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 outline-none"
+                    className="w-full h-10 pl-10 pr-10 glass border-white/5 rounded-xl text-white placeholder:text-gray-500 focus:border-primary-500/50 focus:ring-1 focus:ring-primary-500/20 outline-none transition-all"
                 />
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400" />
 
@@ -169,7 +169,7 @@ export function SearchBar() {
 
             {/* Dropdown */}
             {isOpen && query.length >= 2 && (
-                <div className="absolute top-full left-0 right-0 mt-1 bg-white border border-gray-200 rounded-lg shadow-xl z-50 max-h-[60vh] overflow-y-auto">
+                <div className="absolute top-full left-0 right-0 mt-2 glass rounded-2xl shadow-2xl z-50 max-h-[60vh] overflow-y-auto border-white/5 p-2 origin-top animate-in fade-in zoom-in-95 duration-200">
                     {isLoading ? (
                         <div className="p-6 text-center text-gray-500">
                             <Loader2 className="h-6 w-6 animate-spin mx-auto mb-2" />
@@ -180,7 +180,7 @@ export function SearchBar() {
                             {/* Products */}
                             {results.products.length > 0 && (
                                 <div className="p-2">
-                                    <p className="px-3 py-1 text-xs font-semibold text-gray-500 uppercase">
+                                    <p className="px-3 py-1 text-xs font-semibold text-gray-500 uppercase tracking-widest">
                                         {t('common.products')}
                                     </p>
                                     {results.products.slice(0, 5).map((product) => (
@@ -188,17 +188,17 @@ export function SearchBar() {
                                             key={product.id}
                                             href={`/catalog/product/${product.slug}`}
                                             onClick={() => setIsOpen(false)}
-                                            className="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-100 transition-colors"
+                                            className="flex items-center gap-3 px-3 py-2 rounded-xl hover:bg-white/5 transition-all group"
                                         >
-                                            <div className="w-10 h-10 bg-gray-100 rounded flex items-center justify-center flex-shrink-0">
+                                            <div className="w-10 h-10 bg-white/5 rounded-lg flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition-transform">
                                                 <Tractor className="h-5 w-5 text-gray-400" />
                                             </div>
                                             <div className="flex-1 min-w-0">
-                                                <p className="font-medium text-gray-900 truncate">{product.name}</p>
-                                                <p className="text-sm text-gray-500">{product.brand.name} • {product.sku}</p>
+                                                <p className="font-bold text-white truncate group-hover:text-primary-500 transition-colors">{product.name}</p>
+                                                <p className="text-[10px] text-gray-500 uppercase tracking-widest font-semibold">{product.brand.name} • {product.sku}</p>
                                             </div>
                                             {product.pricing.can_see_price && product.pricing.price_usd && (
-                                                <p className="text-sm font-semibold text-green-600">
+                                                <p className="text-sm font-black text-gradient">
                                                     ${product.pricing.price_usd.toLocaleString()}
                                                 </p>
                                             )}
@@ -209,8 +209,8 @@ export function SearchBar() {
 
                             {/* Categories */}
                             {results.categories.length > 0 && (
-                                <div className="p-2 border-t">
-                                    <p className="px-3 py-1 text-xs font-semibold text-gray-500 uppercase">
+                                <div className="p-2 border-t border-white/5">
+                                    <p className="px-3 py-1 text-xs font-semibold text-gray-500 uppercase tracking-widest">
                                         {t('catalog.categories')}
                                     </p>
                                     {results.categories.map((category) => (
@@ -218,15 +218,15 @@ export function SearchBar() {
                                             key={category.id}
                                             href={`/catalog?category=${category.slug}`}
                                             onClick={() => setIsOpen(false)}
-                                            className="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-100 transition-colors"
+                                            className="flex items-center gap-3 px-3 py-2 rounded-xl hover:bg-white/5 transition-all group"
                                         >
-                                            <div className="w-10 h-10 bg-green-100 rounded flex items-center justify-center flex-shrink-0">
-                                                <Tag className="h-5 w-5 text-green-600" />
+                                            <div className="w-10 h-10 bg-primary-500/10 rounded-lg flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition-transform">
+                                                <Tag className="h-5 w-5 text-primary-500" />
                                             </div>
                                             <div>
-                                                <p className="font-medium text-gray-900">{category.name}</p>
+                                                <p className="font-bold text-white group-hover:text-primary-500 transition-colors">{category.name}</p>
                                                 {category.product_count && (
-                                                    <p className="text-sm text-gray-500">{category.product_count} {t('common.products')}</p>
+                                                    <p className="text-[10px] text-gray-500 uppercase tracking-widest font-bold">{category.product_count} {t('common.products')}</p>
                                                 )}
                                             </div>
                                         </Link>
@@ -236,8 +236,8 @@ export function SearchBar() {
 
                             {/* Brands */}
                             {results.brands.length > 0 && (
-                                <div className="p-2 border-t">
-                                    <p className="px-3 py-1 text-xs font-semibold text-gray-500 uppercase">
+                                <div className="p-2 border-t border-white/5">
+                                    <p className="px-3 py-1 text-xs font-semibold text-gray-500 uppercase tracking-widest">
                                         {t('catalog.brands')}
                                     </p>
                                     {results.brands.map((brand) => (
@@ -245,14 +245,14 @@ export function SearchBar() {
                                             key={brand.id}
                                             href={`/catalog?brand=${brand.slug}`}
                                             onClick={() => setIsOpen(false)}
-                                            className="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-100 transition-colors"
+                                            className="flex items-center gap-3 px-3 py-2 rounded-xl hover:bg-white/5 transition-all group"
                                         >
-                                            <div className="w-10 h-10 bg-blue-100 rounded flex items-center justify-center flex-shrink-0">
-                                                <Building2 className="h-5 w-5 text-blue-600" />
+                                            <div className="w-10 h-10 bg-accent-500/10 rounded-lg flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition-transform">
+                                                <Building2 className="h-5 w-5 text-accent-500" />
                                             </div>
                                             <div>
-                                                <p className="font-medium text-gray-900">{brand.name}</p>
-                                                <p className="text-sm text-gray-500">{brand.country}</p>
+                                                <p className="font-bold text-white group-hover:text-primary-500 transition-colors">{brand.name}</p>
+                                                <p className="text-[10px] text-gray-500 uppercase tracking-widest font-bold">{brand.country}</p>
                                             </div>
                                         </Link>
                                     ))}
@@ -264,7 +264,7 @@ export function SearchBar() {
                                 <Link
                                     href={`/catalog?search=${encodeURIComponent(query)}`}
                                     onClick={() => setIsOpen(false)}
-                                    className="block w-full px-3 py-2 text-center text-green-600 hover:bg-green-50 rounded-lg font-medium transition-colors"
+                                    className="block w-full px-3 py-2.5 text-center text-primary-500 hover:bg-primary-500/10 rounded-xl font-bold text-xs uppercase tracking-widest transition-all"
                                 >
                                     {t('common.showAllResults', { query })}
                                 </Link>
@@ -274,9 +274,10 @@ export function SearchBar() {
                         <div className="p-6 text-center text-gray-500">
                             {t('common.noSearchResults', { query })}
                         </div>
-                    )}
-                </div>
+                    )
+                    }
+                </div >
             )}
-        </div>
+        </div >
     );
 }

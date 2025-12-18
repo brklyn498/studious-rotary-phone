@@ -2,7 +2,7 @@ import { HTMLAttributes, forwardRef } from 'react';
 import { cn } from '@/lib/utils';
 
 export interface CardProps extends HTMLAttributes<HTMLDivElement> {
-    variant?: 'default' | 'elevated' | 'outlined';
+    variant?: 'default' | 'elevated' | 'outlined' | 'glass' | 'premium';
 }
 
 const Card = forwardRef<HTMLDivElement, CardProps>(
@@ -11,11 +11,13 @@ const Card = forwardRef<HTMLDivElement, CardProps>(
             <div
                 ref={ref}
                 className={cn(
-                    'bg-white rounded-xl overflow-hidden',
+                    'rounded-2xl overflow-hidden transition-all duration-300',
                     {
-                        'shadow-sm border border-gray-200': variant === 'default',
-                        'shadow-lg': variant === 'elevated',
-                        'border-2 border-gray-300': variant === 'outlined',
+                        'bg-white dark:bg-zinc-900 shadow-sm border border-gray-200 dark:border-white/5': variant === 'default',
+                        'bg-white dark:bg-zinc-900 shadow-xl shadow-black/10': variant === 'elevated',
+                        'border-2 border-gray-300 dark:border-white/10': variant === 'outlined',
+                        'glass border border-white/5 shadow-2xl shadow-black/20': variant === 'glass',
+                        'bg-gradient-to-br from-white/10 to-transparent backdrop-blur-3xl border border-white/10 shadow-2xl': variant === 'premium',
                     },
                     className
                 )}
@@ -29,21 +31,21 @@ Card.displayName = 'Card';
 
 const CardHeader = forwardRef<HTMLDivElement, HTMLAttributes<HTMLDivElement>>(
     ({ className, ...props }, ref) => (
-        <div ref={ref} className={cn('px-4 py-3 border-b border-gray-100', className)} {...props} />
+        <div ref={ref} className={cn('px-6 py-4 border-b border-white/5', className)} {...props} />
     )
 );
 CardHeader.displayName = 'CardHeader';
 
 const CardContent = forwardRef<HTMLDivElement, HTMLAttributes<HTMLDivElement>>(
     ({ className, ...props }, ref) => (
-        <div ref={ref} className={cn('p-4', className)} {...props} />
+        <div ref={ref} className={cn('p-6', className)} {...props} />
     )
 );
 CardContent.displayName = 'CardContent';
 
 const CardFooter = forwardRef<HTMLDivElement, HTMLAttributes<HTMLDivElement>>(
     ({ className, ...props }, ref) => (
-        <div ref={ref} className={cn('px-4 py-3 border-t border-gray-100', className)} {...props} />
+        <div ref={ref} className={cn('px-6 py-4 border-t border-white/5', className)} {...props} />
     )
 );
 CardFooter.displayName = 'CardFooter';

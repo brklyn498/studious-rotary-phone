@@ -18,7 +18,7 @@ export function BottomNav() {
     ];
 
     return (
-        <nav className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 md:hidden z-50 pb-safe">
+        <nav className="fixed bottom-0 left-0 right-0 glass-morphism md:hidden z-50 pb-safe">
             <div className="flex justify-around items-center h-16">
                 {navItems.map((item) => {
                     const isActive = pathname === item.href ||
@@ -31,14 +31,14 @@ export function BottomNav() {
                             href={item.href}
                             className={cn(
                                 'flex flex-col items-center justify-center w-full h-full relative',
-                                'text-gray-500 transition-colors',
-                                isActive && 'text-green-600'
+                                'text-gray-500 transition-all duration-300',
+                                isActive && 'text-primary-500 font-bold scale-110'
                             )}
                         >
                             <Icon className="w-6 h-6" />
                             <span className="text-xs mt-1">{item.label}</span>
                             {item.badge && (
-                                <span className="absolute top-2 right-1/4 bg-amber-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center font-medium">
+                                <span className="absolute top-2 right-1/4 bg-primary-500 text-white text-[10px] rounded-full w-4 h-4 flex items-center justify-center font-bold shadow-lg shadow-primary-500/40">
                                     0
                                 </span>
                             )}
