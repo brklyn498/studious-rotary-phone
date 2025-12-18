@@ -2,7 +2,7 @@
 Views for accounts app.
 """
 
-from rest_framework import viewsets, generics, status
+from rest_framework import viewsets, generics, status, throttling
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated, AllowAny
@@ -42,6 +42,14 @@ class UserProfileView(generics.RetrieveUpdateAPIView):
         return self.request.user
 
 
+class ThrottledTokenObtainPairView(TokenObtainPairView):
+    """
+    Throttled login view.
+    """
+    throttle_classes = [throttling.ScopedRateThrottle]
+    throttle_scope = 'auth'
+
+
 class UserRegistrationView(generics.CreateAPIView):
     """
     API endpoint for user registration.
@@ -49,6 +57,8 @@ class UserRegistrationView(generics.CreateAPIView):
     """
     serializer_class = UserCreateSerializer
     permission_classes = [AllowAny]
+    throttle_classes = [throttling.ScopedRateThrottle]
+    throttle_scope = 'auth'
     
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
@@ -92,6 +102,8 @@ class INNVerificationView(generics.GenericAPIView):
     """
     serializer_class = INNVerificationSerializer
     permission_classes = [IsAuthenticated]
+    throttle_classes = [throttling.ScopedRateThrottle]
+    throttle_scope = 'verification'
     
     def post(self, request):
         serializer = self.get_serializer(data=request.data)

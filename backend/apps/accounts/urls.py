@@ -5,7 +5,6 @@ URL patterns for accounts app.
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
 from rest_framework_simplejwt.views import (
-    TokenObtainPairView,
     TokenRefreshView,
 )
 
@@ -15,6 +14,7 @@ from .views import (
     UserRegistrationView,
     BusinessProfileView,
     INNVerificationView,
+    ThrottledTokenObtainPairView,
 )
 
 router = DefaultRouter()
@@ -26,7 +26,7 @@ urlpatterns = [
     
     # Authentication
     path('auth/register/', UserRegistrationView.as_view(), name='register'),
-    path('auth/login/', TokenObtainPairView.as_view(), name='token_obtain'),
+    path('auth/login/', ThrottledTokenObtainPairView.as_view(), name='token_obtain'),
     path('auth/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
     path('auth/verify-inn/', INNVerificationView.as_view(), name='verify_inn'),
     
