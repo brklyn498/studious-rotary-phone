@@ -30,6 +30,7 @@ import {
 } from 'lucide-react';
 import { useCartStore } from '@/lib/store/cartStore';
 import { toast } from 'sonner';
+import DOMPurify from 'isomorphic-dompurify';
 
 export default function ProductDetailPage() {
     const params = useParams();
@@ -90,9 +91,10 @@ export default function ProductDetailPage() {
                     console.warn('Failed to fetch related products', err);
                     setRelatedProducts([]);
                 }
-            } catch (err: any) {
+            } catch (err: unknown) {
+                const errorMessage = err instanceof Error ? err.message : 'Unknown error';
                 console.error('Failed to fetch product:', err);
-                setError(err.message === 'API Error: 404 Not Found'
+                setError(errorMessage === 'API Error: 404 Not Found'
                     ? t('catalog.noResults')
                     : t('common.error')
                 );
@@ -413,7 +415,7 @@ export default function ProductDetailPage() {
                         {['description', 'specs', 'documents'].map((tab) => (
                             <button
                                 key={tab}
-                                onClick={() => setActiveTab(tab as any)}
+                                onClick={() => setActiveTab(tab as 'description' | 'specs' | 'documents')}
                                 className={cn(
                                     'px-8 py-4 rounded-2xl text-[10px] font-black tracking-[0.3em] uppercase transition-all duration-300 border',
                                     activeTab === tab
@@ -443,7 +445,7 @@ export default function ProductDetailPage() {
                                         className="prose prose-invert max-w-none text-gray-400 font-medium leading-relaxed
                                           prose-headings:text-white prose-headings:font-black prose-headings:tracking-tighter
                                           prose-strong:text-white prose-a:text-primary-500 hover:prose-a:text-primary-400"
-                                        dangerouslySetInnerHTML={{ __html: product.full_description || product.short_description || '' }}
+                                        dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(product.full_description || product.short_description || '') }}
                                     />
                                 )}
 
