@@ -102,12 +102,24 @@ class UserCreateSerializer(serializers.ModelSerializer):
                 'password_confirm': 'Пароли не совпадают.'
             })
 
+        # Security: Prevent registering as ADMIN
         user_type = data.get('user_type')
+        if user_type == User.UserType.ADMIN:
+            raise serializers.ValidationError({'user_type': 'Регистрация администратора запрещена.'})
+
         if user_type == User.UserType.BUSINESS:
             if not data.get('company_name'):
                 raise serializers.ValidationError({'company_name': 'Название компании обязательно для бизнеса.'})
-            if not data.get('inn'):
+
+            inn = data.get('inn')
+            if not inn:
                 raise serializers.ValidationError({'inn': 'ИНН обязателен для бизнеса.'})
+
+            # Security: Validate INN format
+            if not inn.isdigit():
+                raise serializers.ValidationError({'inn': 'ИНН должен содержать только цифры.'})
+            if len(inn) != 9:
+                raise serializers.ValidationError({'inn': 'ИНН должен состоять из 9 цифр.'})
 
         return data
     
