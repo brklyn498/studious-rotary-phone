@@ -166,6 +166,10 @@ class SearchView(generics.GenericAPIView):
     def get(self, request):
         query = request.query_params.get('q', '').strip()
         
+        # Security: Limit query length to prevent DoS via massive regex/filtering
+        if len(query) > 100:
+            query = query[:100]
+
         if not query or len(query) < 2:
             return Response({
                 'products': [],
