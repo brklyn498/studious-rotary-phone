@@ -37,9 +37,11 @@ SECURE_HSTS_INCLUDE_SUBDOMAINS = True
 SECURE_HSTS_PRELOAD = True
 
 # HTTPS settings (enable when using SSL)
-# SECURE_SSL_REDIRECT = True
-# SESSION_COOKIE_SECURE = True
-# CSRF_COOKIE_SECURE = True
+# Sentinel: Enabling these for production security.
+# Ensure SSL is properly configured at the load balancer or web server level.
+SECURE_SSL_REDIRECT = True
+SESSION_COOKIE_SECURE = True
+CSRF_COOKIE_SECURE = True
 
 # CORS - Specific origins only
 CORS_ALLOW_ALL_ORIGINS = False
