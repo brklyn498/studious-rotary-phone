@@ -67,7 +67,9 @@ export default function RegisterPage() {
             // Successful registration - show success step
             setStep(3);
         } catch (err) {
-            console.error(err);
+            if (process.env.NODE_ENV !== 'production') {
+                console.error(err);
+            }
             setError(err instanceof Error ? err.message : 'Ошибка регистрации. Проверьте данные.');
         } finally {
             setIsLoading(false);
