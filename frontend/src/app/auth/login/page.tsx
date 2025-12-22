@@ -38,7 +38,9 @@ export default function LoginPage() {
             // Redirect to home or callback url
             router.push('/');
         } catch (err) {
-            console.error(err);
+            if (process.env.NODE_ENV !== 'production') {
+                console.error(err);
+            }
             setError(err instanceof Error ? err.message : 'Ошибка входа. Проверьте номер и пароль.');
         } finally {
             setIsLoading(false);
