@@ -3,7 +3,6 @@ Views for accounts app.
 """
 
 from rest_framework import viewsets, generics, status, throttling
-from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework_simplejwt.views import TokenObtainPairView
@@ -169,11 +168,6 @@ class INNVerificationView(generics.GenericAPIView):
         if inn in mock_companies:
             return mock_companies[inn]
         
-        # For any other INN, generate fake data
-        return {
-            'inn': inn,
-            'company_name': f'ООО "Тест Компания {inn[:4]}"',
-            'legal_address': 'г. Ташкент, тестовый адрес',
-            'vat_payer': False,
-            'status': 'active'
-        }
+        # Security: In mock mode, only allow specific test INNs
+        # Reject unknown INNs to prevent arbitrary verification
+        return None
