@@ -91,7 +91,9 @@ export function SearchBar() {
                 });
                 setResults(searchResults);
             } catch (error) {
-                console.error('Search error:', error);
+                if (process.env.NODE_ENV !== 'production') {
+                    console.error('Search error:', error);
+                }
                 setResults(null);
             } finally {
                 setIsLoading(false);

@@ -91,7 +91,9 @@ export default function CatalogPage() {
                 }
 
             } catch (err) {
-                console.error('Failed to fetch catalog data:', err);
+                if (process.env.NODE_ENV !== 'production') {
+                    console.error('Failed to fetch catalog data:', err);
+                }
                 setError(t('common.error'));
             } finally {
                 setLoading(false);
