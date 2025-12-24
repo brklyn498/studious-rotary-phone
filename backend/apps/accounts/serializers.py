@@ -82,11 +82,11 @@ class UserCreateSerializer(serializers.ModelSerializer):
     password_confirm = serializers.CharField(write_only=True)
     
     # Optional business fields
-    company_name = serializers.CharField(write_only=True, required=False, allow_blank=True)
+    company_name = serializers.CharField(write_only=True, required=False, allow_blank=True, max_length=255)
     inn = serializers.CharField(write_only=True, required=False, allow_blank=True)
 
     # Region input
-    region_name = serializers.CharField(write_only=True, required=False)
+    region_name = serializers.CharField(write_only=True, required=False, max_length=100)
 
     class Meta:
         model = User

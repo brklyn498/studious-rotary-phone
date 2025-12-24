@@ -93,7 +93,9 @@ export default function ProductDetailPage() {
                 }
             } catch (err: unknown) {
                 const errorMessage = err instanceof Error ? err.message : 'Unknown error';
-                console.error('Failed to fetch product:', err);
+                if (process.env.NODE_ENV !== 'production') {
+                    console.error('Failed to fetch product:', err);
+                }
                 setError(errorMessage === 'API Error: 404 Not Found'
                     ? t('catalog.noResults')
                     : t('common.error')
