@@ -2,7 +2,7 @@
 Views for catalog app.
 """
 
-from rest_framework import viewsets, generics, status
+from rest_framework import viewsets, generics, status, throttling
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework.permissions import AllowAny
@@ -162,6 +162,8 @@ class SearchView(generics.GenericAPIView):
     In production, use MeiliSearch for better results.
     """
     permission_classes = [AllowAny]
+    throttle_classes = [throttling.ScopedRateThrottle]
+    throttle_scope = 'search'
     
     def get(self, request):
         query = request.query_params.get('q', '').strip()
