@@ -7,6 +7,7 @@ from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework_simplejwt.views import TokenObtainPairView
 from django.utils import timezone
+from django.conf import settings
 
 from .models import User, Region, BusinessProfile
 from .serializers import (
@@ -110,6 +111,13 @@ class INNVerificationView(generics.GenericAPIView):
         
         inn = serializer.validated_data['inn']
         
+        # Security: In production, mock verification MUST be disabled
+        if not settings.DEBUG:
+            # TODO: Implement real Soliq.uz API integration
+            return Response({
+                'error': 'Verification service is temporarily unavailable in production mode.'
+            }, status=status.HTTP_503_SERVICE_UNAVAILABLE)
+
         # MOCK: Simulate Soliq.uz API response
         # In production, call real API here
         mock_response = self._mock_soliq_verification(inn)

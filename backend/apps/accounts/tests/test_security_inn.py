@@ -1,11 +1,29 @@
 from rest_framework.test import APITestCase
 from rest_framework import status
 from django.contrib.auth import get_user_model
+from django.test import override_settings
 from apps.accounts.models import BusinessProfile
 
 User = get_user_model()
 
 
+# We need to disable debug toolbar middleware because overriding DEBUG=True
+# enables the middleware logic but the URLs are not loaded in the test environment,
+# causing NoReverseMatch: 'djdt' is not a registered namespace.
+@override_settings(
+    DEBUG=True,
+    MIDDLEWARE=[
+        'django.middleware.security.SecurityMiddleware',
+        'corsheaders.middleware.CorsMiddleware',
+        'django.contrib.sessions.middleware.SessionMiddleware',
+        'django.middleware.locale.LocaleMiddleware',
+        'django.middleware.common.CommonMiddleware',
+        'django.middleware.csrf.CsrfViewMiddleware',
+        'django.contrib.auth.middleware.AuthenticationMiddleware',
+        'django.contrib.messages.middleware.MessageMiddleware',
+        'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    ]
+)
 class INNVerificationSecurityTest(APITestCase):
     def setUp(self):
         self.user = User.objects.create_user(
@@ -63,3 +81,33 @@ class INNVerificationSecurityTest(APITestCase):
         profile = BusinessProfile.objects.get(user=self.user)
         self.assertEqual(profile.inn, valid_inn)
         self.assertEqual(profile.company_name, 'ООО "АгроТех Ферма"')
+
+
+class ProductionINNVerificationSecurityTest(APITestCase):
+    def setUp(self):
+        self.user = User.objects.create_user(
+            username='hacker',
+            password='password123',
+            email='hacker@example.com',
+            user_type=User.UserType.GUEST
+        )
+        self.url = '/api/v1/auth/verify-inn/'
+
+    @override_settings(DEBUG=False)
+    def test_mock_disabled_in_production(self):
+        """
+        Security Test:
+        Verify that the mock implementation is DISABLED when DEBUG=False.
+        This confirms the fix works.
+        """
+        self.client.force_authenticate(user=self.user)
+
+        # Use a KNOWN mock INN that works in DEBUG=True
+        valid_inn = '123456789'
+
+        data = {'inn': valid_inn}
+        response = self.client.post(self.url, data)
+
+        # NEW BEHAVIOR: It should fail safely (503 Service Unavailable)
+        self.assertEqual(response.status_code, status.HTTP_503_SERVICE_UNAVAILABLE)
+        self.assertEqual(response.data['error'], 'Verification service is temporarily unavailable in production mode.')
