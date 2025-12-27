@@ -43,7 +43,12 @@ class BusinessProfileSerializer(serializers.ModelSerializer):
             'vat_payer', 'verified_at', 'is_verified',
             'pricing_tier', 'contact_name', 'contact_phone'
         ]
-        read_only_fields = ['verified_at', 'is_verified', 'pricing_tier']
+        # Security: Sensitive business data must be verified via Soliq.uz (INNVerificationView)
+        # and cannot be manually edited by the user to prevent impersonation.
+        read_only_fields = [
+            'inn', 'company_name', 'legal_address', 'vat_payer',
+            'verified_at', 'is_verified', 'pricing_tier'
+        ]
 
 
 class UserSerializer(serializers.ModelSerializer):
